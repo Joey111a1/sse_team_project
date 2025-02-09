@@ -1,0 +1,107 @@
+# =========================================
+# Operating System Files
+# =========================================
+.DS_Store
+Thumbs.db
+
+# =========================================
+# Logs & Temp Files
+# =========================================
+*.log
+*.tmp
+*.cache
+*.pid
+*.seed
+*.pid.lock
+
+# =========================================
+# Python
+# =========================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environments
+env/
+venv/
+.venv/
+
+# Jupyter Notebooks checkpoints (if using notebooks)
+.ipynb_checkpoints/
+
+# =========================================
+# Java
+# =========================================
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven / Gradle directories (if applicable)
+target/
+out/
+build/
+*.iml
+*.ipr
+*.iws
+
+# Gradle cache (if using Gradle)
+.gradle/
+
+# =========================================
+# Node.js (if using Node-related tooling)
+# =========================================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# =========================================
+# CSS / Sass / LESS
+# =========================================
+# If you're using a preprocessor like Sass, ignore the generated CSS.
+*.css.map
+.sass-cache/
+*.css.map
+
+# If you have a dedicated build folder for processed CSS or bundler outputs
+dist/
+build/
+public/
+
+# =========================================
+# SQL / Database files
+# =========================================
+*.sql
+*.sqlite
+*.sqlite3
+db.sqlite3
+
+# =========================================
+# Environment / Configuration
+# =========================================
+.env
+*.env.*
+
+# =========================================
+# Coverage Reports
+# =========================================
+coverage/
+coverage.json
+nyc_output/
+
+# =========================================
+# IDE / Editor Directories and Files
+# =========================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# =========================================
+# Others
+# =========================================
+*.swp
+*.swo
