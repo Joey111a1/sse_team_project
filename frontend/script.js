@@ -43,7 +43,15 @@ function initCanvasPosition() {
 }
 
 // 页面加载后初始化
-window.addEventListener('load', initCanvasPosition);
+window.addEventListener('load', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空画布
+
+    // 保存空白状态到 history
+    saveState();
+
+    // 初始化网格（如果需要）
+    initCanvasPosition();
+});
 
 // 绘制网格
 function drawGrid(lineColor = '#cccccc', lineWidth = 0.5) {
@@ -95,15 +103,13 @@ function resizeCanvas(newWidth, newHeight) {
 }
 
 
+
+
+
 // Tool states
 let currentTool = 'pencil';
 let currentColor = '#000000';
 let isDrawing = false; // Track if the mouse is pressed
-
-// For redo/undo
-let history = [];
-let redoStack = [];
-const maxHistorySize = 20;
 
 // Get button elements
 const pencilTool = document.getElementById('pencil-tool');
@@ -118,6 +124,7 @@ pencilTool.addEventListener('click', () => {
     bucketTool.classList.remove('active'); 
     eraserTool.classList.remove('active'); 
 	colorpickerTool.classList.remove('active');
+    brushPanel.style.display = 'flex'; // 显示 Panel
 });
 
 bucketTool.addEventListener('click', () => {
@@ -126,6 +133,7 @@ bucketTool.addEventListener('click', () => {
     pencilTool.classList.remove('active');
     eraserTool.classList.remove('active');
 	colorpickerTool.classList.remove('active');
+    brushPanel.style.display = 'none'; // 隐藏 Panel
 });
 
 eraserTool.addEventListener('click', () => {
@@ -134,6 +142,7 @@ eraserTool.addEventListener('click', () => {
     pencilTool.classList.remove('active'); 
     bucketTool.classList.remove('active'); 
 	colorpickerTool.classList.remove('active');
+    brushPanel.style.display = 'flex'; // 显示 Panel
 });
 
 colorpickerTool.addEventListener('click', () => {
@@ -142,6 +151,7 @@ colorpickerTool.addEventListener('click', () => {
     pencilTool.classList.remove('active'); 
     bucketTool.classList.remove('active'); 
 	colorpickerTool.classList.remove('active');
+    brushPanel.style.display = 'none'; // 隐藏 Panel
 });
 
 // Set active tool function
@@ -187,29 +197,6 @@ canvas.addEventListener('mouseleave', () => {
 	saveState();
 });
 
-function saveState() {
-    const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    if (history.length > 0) {
-        const lastState = history[history.length - 1];
-        if (arraysEqual(lastState.data, currentState.data)) return;
-    }
-
-    if (history.length >= maxHistorySize) {
-        history.shift();
-        syncWithBackend();
-    }
-    history.push(currentState);
-    redoStack = [];
-}
-
-function arraysEqual(a, b) {
-    if (a.length !== b.length) return false;
-    for (let i = 0; i < a.length; i++) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
-}
-
 // Handle drawing logic
 function handleDraw(e) {
     const x = Math.floor(e.offsetX / pixelSize);
@@ -226,12 +213,19 @@ function handleDraw(e) {
     } else if (currentTool === 'colorpicker') {
         pickColor(x, y);
     }
+
+    // saveState(); 
 }
 
 // Draw a single pixel
 function drawPixel(x, y) {
     ctx.fillStyle = currentColor;
-    ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+    ctx.fillRect(
+        x * pixelSize, // 起始 X
+        y * pixelSize, // 起始 Y
+        brushSize * pixelSize, // 宽度
+        brushSize * pixelSize // 高度
+    );
 }
 
 // Flood fill algorithm (bucket tool)
@@ -276,7 +270,7 @@ function fillArea(x, y) {
 // Erase the pixel to white
 function erasePixel(x, y) {
     ctx.globalCompositeOperation = 'destination-out'; // 让填充变透明
-    ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+    ctx.fillRect(x * pixelSize, y * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
     ctx.globalCompositeOperation = 'source-over'; // 恢复正常绘制模式
 }
 
@@ -324,26 +318,106 @@ document.querySelectorAll('.color-palette .color').forEach(color => {
 
 
 
+
+
+
+// Brush Size 
+const brushPanel = document.getElementById('brush-panel');
+const brushSizeInput = document.getElementById('brush-size');
+
+// 当前笔刷大小
+let brushSize = 1;
+
+// 监听滑杆输入事件
+brushSizeInput.addEventListener('input', (e) => {
+    brushSize = parseInt(e.target.value); // 更新笔刷大小
+});
+
+
+
+
 // Right Panel
 const undoTool = document.getElementById('undo-tool');
 const redoTool = document.getElementById('redo-tool');
 const exportPngButton = document.getElementById('export-png');
 
+// For redo/undo
+let history = [];
+let redoStack = [];
+const maxHistorySize = 20;
+
 document.getElementById('undo-tool').addEventListener('click', () => {
-    if (history.length > 0) {
-        redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height)); // 当前状态存入重做栈
-        const previousState = history.pop(); // 获取上一个状态
-        ctx.putImageData(previousState, 0, 0); // 恢复上一个状态
+    if (history.length > 1) {
+        const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (!currentState) {
+            console.error('Failed to get ImageData');
+            return;
+        }
+        redoStack.push(currentState); // 当前状态存入重做栈
+        history.pop(); // 移除最后一个状态
+        const previousState = history[history.length - 1]; // 获取上一个状态
+        if (previousState) {
+            ctx.putImageData(previousState, 0, 0); // 恢复上一个状态
+        }
     }
 });
 
 document.getElementById('redo-tool').addEventListener('click', () => {
     if (redoStack.length > 0) {
-        history.push(ctx.getImageData(0, 0, canvas.width, canvas.height)); // 当前状态存入历史记录
+        const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (!currentState) {
+            console.error('Failed to get ImageData');
+            return;
+        }
         const nextState = redoStack.pop(); // 获取下一个状态
-        ctx.putImageData(nextState, 0, 0); // 恢复下一个状态
+        if (nextState) {
+            ctx.putImageData(nextState, 0, 0); // 恢复下一个状态
+            history.push(nextState); // 当前状态存入历史记录
+        }
     }
 });
+
+// Export as PNG
+exportPngButton.addEventListener('click', () => {
+    exportCanvas('png');
+});
+
+function saveState() {
+    const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    if (!currentState) {
+        console.error('Failed to get ImageData');
+        return;
+    }
+
+    if (history.length > 0) {
+        const lastState = history[history.length - 1];
+        if (arraysEqual(lastState.data, currentState.data)) return;
+    }
+
+    if (history.length >= maxHistorySize) {
+        history.shift();
+        syncWithBackend();
+    }
+    history.push(currentState);
+    redoStack = [];
+}
+
+function arraysEqual(a, b) {
+    if (!a || !b) return false; // 检查 a 和 b 是否存在
+    if (a.length !== b.length) return false;
+
+    // 比较每个像素的 RGBA 值
+    for (let i = 0; i < a.length; i += 4) {
+        if (a[i] !== b[i] ||     // R
+            a[i + 1] !== b[i + 1] || // G
+            a[i + 2] !== b[i + 2] || // B
+            a[i + 3] !== b[i + 3]) { // A
+            return false;
+        }
+    }
+    return true;
+}
 
 function syncWithBackend(state) {
     const imageData = Array.from(state.data); // 将 ImageData 转换为数组
@@ -353,11 +427,6 @@ function syncWithBackend(state) {
         headers: { 'Content-Type': 'application/json' }
     });
 }
-
-// Export as PNG
-exportPngButton.addEventListener('click', () => {
-    exportCanvas('png');
-});
 
 function exportCanvas(format) {
     const link = document.createElement('a');

@@ -25,15 +25,16 @@ body {
 
 h1 {
     position: fixed; /* 固定定位 */
-    top: 20px; /* 距离顶部 20px */
-    left: 50%; /* 水平居中 */
-    transform: translateX(-50%); /* 水平居中 */
+    top: 0; /* 固定在页面顶部 */
+    left: 0; /* 从页面最左侧开始 */
+    width: 100%; /* 背景与页面一样宽 */
+    text-align: center; /* 文字水平居中 */
+    font-weight: bold; /* 文字加粗 */
     margin: 0; /* 移除默认的外边距 */
     font-size: 24px; /* 调整字体大小 */
     z-index: 1000; /* 确保标题在最上层 */
-    background-color: #c5c5c5; /* 添加背景色，避免与内容重叠 */
-    padding: 10px 20px; /* 添加内边距 */
-    border-radius: 5px; /* 圆角 */
+    background-color: #c5c5c5; /* 背景色 */
+    padding: 10px 0; /* 上下内边距 10px，左右内边距 0 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
 }
 
@@ -45,6 +46,25 @@ h1 {
     flex-grow: 1; /* 让 main-content 占据剩余空间 */
 }
 
+/* Brush Panel */
+.brush-panel {
+    position: fixed;
+    top: 70px; /* Header 高度 + 20px */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f1f1f1;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* 默认隐藏 */
+    z-index: 999; /* 确保在画布上方 */
+}
+
+.brush-panel span {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
 .left-panel, .right-panel {
     display: flex;
     flex-direction: column; /* 竖直排列 */
@@ -54,7 +74,7 @@ h1 {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 15px; /* 添加内边距，让背景比内容大 */
-    width: 100px; /* 固定宽度 */
+    width: 75px; /* 固定宽度 */
 }
 
 .left-panel {
