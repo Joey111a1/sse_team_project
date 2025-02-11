@@ -1,0 +1,189 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 确保 body 占满整个视口高度 */
+    overflow: hidden; /* 防止滚动条 */
+}
+
+.container {
+    width: 100%; /* 铺满整个屏幕宽度 */
+    max-width: 1200px; /* 最大宽度，避免在大屏幕上过宽 */
+    height: 100vh; /* 铺满整个屏幕高度 */
+    display: flex;
+    flex-direction: column; /* 竖直排列 */
+    justify-content: center; /* 垂直居中 */
+    align-items: center; /* 水平居中 */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* 为 bottom-panel 的定位提供参考 */
+}
+
+h1 {
+    position: fixed; /* 固定定位 */
+    top: 0; /* 固定在页面顶部 */
+    left: 0; /* 从页面最左侧开始 */
+    width: 100%; /* 背景与页面一样宽 */
+    text-align: center; /* 文字水平居中 */
+    font-weight: bold; /* 文字加粗 */
+    margin: 0; /* 移除默认的外边距 */
+    font-size: 24px; /* 调整字体大小 */
+    z-index: 1000; /* 确保标题在最上层 */
+    background-color: #c5c5c5; /* 背景色 */
+    padding: 10px 0; /* 上下内边距 10px，左右内边距 0 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+}
+
+.main-content {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    width: 100%; /* 铺满 container 宽度 */
+    flex-grow: 1; /* 让 main-content 占据剩余空间 */
+}
+
+/* Brush Panel */
+.brush-panel {
+    position: fixed;
+    top: 70px; /* Header 高度 + 20px */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f1f1f1;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* 默认隐藏 */
+    z-index: 999; /* 确保在画布上方 */
+}
+
+.brush-panel span {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.left-panel, .right-panel {
+    display: flex;
+    flex-direction: column; /* 竖直排列 */
+    align-items: center; /* 水平居中 */
+    gap: 10px; /* 按钮之间的间距 */
+    background-color: #c5c5c5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 15px; /* 添加内边距，让背景比内容大 */
+    width: 75px; /* 固定宽度 */
+}
+
+.left-panel {
+    margin-right: auto; /* 左边面板靠左 */
+}
+
+.left-panel p {
+    margin: 0; /* 移除默认的外边距 */
+    font-size: 18px; /* 调整字体大小 */
+}
+
+.right-panel {
+    margin-left: auto; /* 右边面板靠右 */
+}
+
+.bottom-panel {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    gap: 10px; /* 按钮之间的间距 */
+    background-color: #c5c5c5;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 15px; /* 添加内边距，让背景比内容大 */
+    position: fixed; /* 固定在窗口底部 */
+    bottom: 20px; /* 距离底部 20px */
+    left: 50%; /* 水平居中 */
+    transform: translateX(-50%); /* 水平居中 */
+    z-index: 1000; /* 确保在最上层 */
+}
+
+.tool-button {
+    width: 40px; /* 按钮宽度 */
+    height: 40px; /* 按钮高度 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9; /* 默认背景色 */
+    border: 1px solid #ccc; /* 边框 */
+    border-radius: 5px; /* 圆角 */
+    cursor: pointer;
+    transition: background-color 0.2s; /* 背景色变化动画 */
+}
+
+.tool-button.active {
+    background-color: #007bff; /* 选中时的背景色 */
+}
+
+.tool-button:hover {
+    background-color: #e0e0e0; /* 鼠标悬停时的背景色 */
+}
+
+.tool-button img {
+    width: 24px; /* 图标大小 */
+    height: 24px;
+}
+
+button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+input[type="color"] {
+    padding: 0;
+    border: none;
+    background: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    margin: 0 auto; /* 水平居中 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform-origin: center center; /* 让缩放和旋转以中心为基准 */
+    position: relative;
+    width: fit-content; /* 让容器宽度适应内容 */
+    cursor: grab; /* 拖拽时显示抓取光标 */
+}
+
+#pixel-canvas,
+#grid-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px; /* 与 canvasSize 一致 */
+    height: 400px; /* 与 canvasSize 一致 */
+    border: 1px solid #ccc; /* 添加边框方便调试 */
+    transform-origin: center center; /* 让缩放和旋转以中心为基准 */
+}
+
+#grid-canvas {
+    pointer-events: none; /* 防止网格画布拦截事件 */
+}
+
+@media (max-width: 768px) {
+    .left-panel, .right-panel {
+        width: 120px; /* 小屏幕时缩小宽度 */
+    }
+}
