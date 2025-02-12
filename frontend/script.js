@@ -283,6 +283,8 @@ function pickColor(x, y) {
 
 // 将 RGB 颜色转换为 HEX 格式
 function rgbToHex(rgb) {
+	if (rgb.charAt(0) === '#') return rgb;
+
     const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
     if (!match) return '#000000';
     const r = parseInt(match[1], 10).toString(16).padStart(2, '0');
@@ -336,6 +338,11 @@ brushSizeInput.addEventListener('input', (e) => {
 
 
 
+
+
+
+
+
 // Right Panel
 const undoTool = document.getElementById('undo-tool');
 const redoTool = document.getElementById('redo-tool');
@@ -378,8 +385,9 @@ document.getElementById('redo-tool').addEventListener('click', () => {
 });
 
 // Export as PNG
-exportPngButton.addEventListener('click', () => {
-    exportCanvas('png');
+document.getElementById('export-png').addEventListener('click', () => {
+    const format = 'png'; // 导出格式
+    exportCanvas(format, rotation);
 });
 
 function saveState() {
@@ -428,13 +436,30 @@ function syncWithBackend(state) {
     });
 }
 
-function exportCanvas(format) {
+// 导出画布内容
+function exportCanvas(format, angle) {
+    // 创建临时画布
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+
+    // 计算旋转后的画布尺寸
+    const radians = (angle * Math.PI) / 180; // 将角度转换为弧度
+    const width = canvas.width;
+    const height = canvas.height;
+    tempCanvas.width = Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
+    tempCanvas.height = Math.abs(height * Math.cos(radians)) + Math.abs(width * Math.sin(radians));
+
+    // 将内容绘制到临时画布并旋转
+    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2); // 将原点移动到中心
+    tempCtx.rotate(radians); // 旋转
+    tempCtx.drawImage(canvas, -width / 2, -height / 2); // 绘制原始画布内容
+
+    // 从临时画布导出图像
     const link = document.createElement('a');
     link.download = `pixel-art.${format}`;
-    link.href = canvas.toDataURL(`image/${format}`);
+    link.href = tempCanvas.toDataURL(`image/${format}`);
     link.click();
 }
-
 
 
 
@@ -448,12 +473,16 @@ const defaultX = 0;
 const defaultY = 0;
 const scaleStep = 0.1; // 每次缩放的比例
 const canvasContainer = document.querySelector(".canvas-container");
+const defaultIsFlippedHorizontal = false;
+const defaultIsFlippedVertical = false;
 
 let scale = defaultScale; // 当前缩放比例
 let rotation = defaultRotation; // 当前旋转角度
 let isDragging = false;
 let startX, startY;
 let translateX = defaultX, translateY = defaultY;
+let isFlippedHorizontal = defaultIsFlippedHorizontal;
+let isFlippedVertical = defaultIsFlippedVertical;
 
 // 更新画布变换
 function updateTransform() {
@@ -503,6 +532,58 @@ document.getElementById('rotate-right').addEventListener('click', () => {
     updateTransform(); // 更新变换
 });
 
+// 水平翻转
+function flipHorizontal() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width / 2; x++) {
+            const index1 = (y * width + x) * 4;
+            const index2 = (y * width + (width - x - 1)) * 4;
+
+            for (let i = 0; i < 4; i++) {
+                const temp = data[index1 + i];
+                data[index1 + i] = data[index2 + i];
+                data[index2 + i] = temp;
+            }
+        }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    isFlippedHorizontal = !isFlippedHorizontal;
+}
+
+// 垂直翻转
+function flipVertical() {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height / 2; y++) {
+            const index1 = (y * width + x) * 4;
+            const index2 = ((height - y - 1) * width + x) * 4;
+
+            for (let i = 0; i < 4; i++) {
+                const temp = data[index1 + i];
+                data[index1 + i] = data[index2 + i];
+                data[index2 + i] = temp;
+            }
+        }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    isFlippedVertical = !isFlippedVertical;
+}
+
+// 绑定按钮点击事件
+document.getElementById('horizonal-flip').addEventListener('click', flipHorizontal);
+document.getElementById('vertical-flip').addEventListener('click', flipVertical);
+
 // 缩放画布
 function zoomCanvas(newScale) {
     scale = newScale;
@@ -519,11 +600,26 @@ document.getElementById('zoomout-tool').addEventListener('click', () => {
     zoomCanvas(scale - scaleStep);
 });
 
-// Reset Zoom In
+// Reset
 document.getElementById('reset-canvas').addEventListener('click', () => {
     translateX = defaultX;
     translateY = defaultY;
     rotation = defaultRotation;
     scale = defaultScale;
+
+    // 如果当前是水平翻转状态，则再次翻转以恢复
+    if (isFlippedHorizontal) {
+        flipHorizontal();
+    }
+
+    // 如果当前是垂直翻转状态，则再次翻转以恢复
+    if (isFlippedVertical) {
+        flipVertical();
+    }
+
+    // 重置翻转状态
+    isFlippedHorizontal = defaultIsFlippedHorizontal;
+    isFlippedVertical = defaultIsFlippedVertical;
+
     updateTransform(); // 更新变换
 });
