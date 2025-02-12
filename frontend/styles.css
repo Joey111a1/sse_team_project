@@ -168,7 +168,8 @@ input[type="color"] {
 }
 
 #pixel-canvas,
-#grid-canvas {
+#grid-canvas,
+#cursor-canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -178,7 +179,7 @@ input[type="color"] {
     transform-origin: center center; /* 让缩放和旋转以中心为基准 */
 }
 
-#grid-canvas {
+#grid-canvas, #cursor-canvas {
     pointer-events: none; /* 防止网格画布拦截事件 */
 }
 
