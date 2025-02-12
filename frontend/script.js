@@ -385,7 +385,10 @@ document.getElementById('redo-tool').addEventListener('click', () => {
 });
 
 // Export as PNG
-document.getElementById('export-png').addEventListener('click', () => exportCanvas('png'));
+document.getElementById('export-png').addEventListener('click', () => {
+    const format = 'png'; // 导出格式
+    exportCanvas(format, rotation);
+});
 
 function saveState() {
     const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -433,13 +436,30 @@ function syncWithBackend(state) {
     });
 }
 
-function exportCanvas(format) {
+// 导出画布内容
+function exportCanvas(format, angle) {
+    // 创建临时画布
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+
+    // 计算旋转后的画布尺寸
+    const radians = (angle * Math.PI) / 180; // 将角度转换为弧度
+    const width = canvas.width;
+    const height = canvas.height;
+    tempCanvas.width = Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
+    tempCanvas.height = Math.abs(height * Math.cos(radians)) + Math.abs(width * Math.sin(radians));
+
+    // 将内容绘制到临时画布并旋转
+    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2); // 将原点移动到中心
+    tempCtx.rotate(radians); // 旋转
+    tempCtx.drawImage(canvas, -width / 2, -height / 2); // 绘制原始画布内容
+
+    // 从临时画布导出图像
     const link = document.createElement('a');
     link.download = `pixel-art.${format}`;
-    link.href = canvas.toDataURL(`image/${format}`);
+    link.href = tempCanvas.toDataURL(`image/${format}`);
     link.click();
 }
-
 
 
 
