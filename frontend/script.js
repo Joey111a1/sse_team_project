@@ -226,7 +226,7 @@ function handleDraw(e) {
         pickColor(x, y);
     }
 
-    // saveState(); 
+    saveState(); 
 }
 
 // Draw a single pixel
