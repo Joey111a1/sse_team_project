@@ -240,23 +240,11 @@ canvas.addEventListener('mousedown', (e) => {
     // 在光标画布上绘制笔刷预览框
     drawBrushPreview(x, y);
 
-	const x = Math.floor(e.offsetX / pixelSize);
-    const y = Math.floor(e.offsetY / pixelSize);
-
-    // 在光标画布上绘制笔刷预览框
-    drawBrushPreview(x, y);
-
     isDrawing = true; // Start drawing
     handleDraw(e); // Draw the initial pixel
 });
 
 canvas.addEventListener('mousemove', (e) => {
-	const x = Math.floor(e.offsetX / pixelSize);
-    const y = Math.floor(e.offsetY / pixelSize);
-
-    // 在光标画布上绘制笔刷预览框
-    drawBrushPreview(x, y);
-	
 	const x = Math.floor(e.offsetX / pixelSize);
     const y = Math.floor(e.offsetY / pixelSize);
 
@@ -287,7 +275,6 @@ function handleDraw(e) {
         y < 0 || y >= canvas.height / pixelSize) return;
 
     if (currentTool === 'pencil') {
-        drawPixelwBrushSize(x, y);
         drawPixelwBrushSize(x, y);
     } else if (currentTool === 'bucket') {
         fillArea(x, y);
@@ -418,8 +405,6 @@ function fillArea(x, y) {
 function erasePixel(x, y) {
 	const startX = x - Math.floor(brushSize / 2);
 	const startY = y - Math.floor(brushSize / 2);
-	const startX = x - Math.floor(brushSize / 2);
-	const startY = y - Math.floor(brushSize / 2);
     ctx.globalCompositeOperation = 'destination-out'; // 让填充变透明
     ctx.fillRect(startX * pixelSize, startY * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
     ctx.fillRect(startX * pixelSize, startY * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
@@ -447,19 +432,7 @@ function rgbToHex(rgb) {
 
 // Get the color of a specific pixel in HEX format
 function getPixelColor(x, y) {
-    // 计算中心像素的位置
-    // const centerX = Math.floor(x / brushSize) * brushSize + Math.floor(brushSize / 2);
-    // const centerY = Math.floor(y / brushSize) * brushSize + Math.floor(brushSize / 2);
-
     // // 获取中心像素的颜色
-    // const imageData = ctx.getImageData(centerX, centerY, 1, 1).data;
-	const imageData = ctx.getImageData(x * pixelSize, y * pixelSize, 1, 1).data;
-    // 计算中心像素的位置
-    // const centerX = Math.floor(x / brushSize) * brushSize + Math.floor(brushSize / 2);
-    // const centerY = Math.floor(y / brushSize) * brushSize + Math.floor(brushSize / 2);
-
-    // // 获取中心像素的颜色
-    // const imageData = ctx.getImageData(centerX, centerY, 1, 1).data;
 	const imageData = ctx.getImageData(x * pixelSize, y * pixelSize, 1, 1).data;
     const alpha = imageData[3]; // Alpha channel
 
