@@ -1,41 +1,98 @@
 // Canvas setup
 const canvas = document.getElementById('pixel-canvas');
 const ctx = canvas.getContext('2d');
+const gridCanvas = document.getElementById('grid-canvas');
+const gridCtx = gridCanvas.getContext('2d');
+const cursorCanvas = document.getElementById('cursor-canvas');
+const cursorCtx = cursorCanvas.getContext('2d');
 
-// Set canvas size
-const canvasSize = 400; // 400x400 pixels
-canvas.width = canvasSize;
-canvas.height = canvasSize;
-
-// Set pixel size
+// Set default pixel size
 const pixelSize = 10; // Each pixel is 10x10 pixels
-const gridSize = canvasSize / pixelSize;
+const minPixels = 2;
+const maxPixels = 80;
+
+// 模态窗口和输入元素
+const modal = document.getElementById('canvas-size-modal');
+const canvasWidthInput = document.getElementById('canvas-width');
+const canvasHeightInput = document.getElementById('canvas-height');
+const confirmButton = document.getElementById('confirm-canvas-size');
+const canvasWidthDisplay = document.getElementById('canvas-width-display');
+const canvasHeightDisplay = document.getElementById('canvas-height-display');
+
+// 显示模态窗口
+modal.style.display = 'flex';
+
+const errorMessage = document.getElementById('canvas-size-error'); 
+
+function validateInput(value, min, max, dimension) {
+    if (value < min) {
+        return `The minimum allowed ${dimension} is ${min} pixels. Please enter a larger value.`;
+    } else if (value > max) {
+        return `The maximum allowed ${dimension} is ${max} pixels. Please enter a smaller value.`;
+    }
+    return ''; // 输入有效，返回空字符串
+}
+
+confirmButton.addEventListener('click', () => {
+    // 获取输入值
+    const width = parseInt(canvasWidthInput.value);
+    const height = parseInt(canvasHeightInput.value);
+
+    // 验证宽度和高度
+    const widthError = validateInput(width, minPixels, maxPixels, 'width');
+    const heightError = validateInput(height, minPixels, maxPixels, 'height');
+
+    // 如果有错误信息，显示并返回
+    if (widthError || heightError) {
+        errorMessage.textContent = [widthError, heightError].filter(Boolean).join('\n'); // 合并错误信息
+        return;
+    }
+
+    // 如果输入值有效，设置画布大小
+    if (width > 0 && height > 0) {
+        const canvasWidth = width * pixelSize;
+        const canvasHeight = height * pixelSize;
+
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        gridCanvas.width = canvasWidth;
+        gridCanvas.height = canvasHeight;
+        cursorCanvas.width = canvasWidth;
+        cursorCanvas.height = canvasHeight;
+
+        // 更新显示的宽度和高度
+        canvasWidthDisplay.textContent = width;
+        canvasHeightDisplay.textContent = height;
+
+        // 隐藏模态窗口
+        modal.style.display = 'none';
+
+        // 初始化画布
+        initCanvas();
+    } else {
+        errorMessage.textContent = 'Please enter valid width and height values.';
+    }
+});
 
 // Initialize canvas with white background
 ctx.globalCompositeOperation = 'source-over';
-ctx.fillStyle = '#ffffff';
-ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-// Canvas setup
-const gridCanvas = document.getElementById('grid-canvas');
-const gridCtx = gridCanvas.getContext('2d');
-
-// Set canvas size
-canvas.width = canvasSize;
-canvas.height = canvasSize;
-gridCanvas.width = canvasSize;
-gridCanvas.height = canvasSize;
 
 // 初始化网格
-function initGrid() {
-    drawGrid();
+function initCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空画布
+
+    // 保存空白状态到 history
+    saveState();
+
+    // 初始化网格（如果需要）
+    initCanvasPosition();
 }
 
 // 初始化画布位置
 function initCanvasPosition() {
     const container = document.querySelector('.canvas-container');
-    const canvasWidth = canvasSize * scale;
-    const canvasHeight = canvasSize * scale;
+    const canvasWidth = canvas.width * scale;
+    const canvasHeight = canvas.height * scale;
     container.style.width = `${canvasWidth}px`;
     container.style.height = `${canvasHeight}px`;
     updateTransform();
@@ -54,24 +111,24 @@ window.addEventListener('load', () => {
 });
 
 // 绘制网格
-function drawGrid(lineColor = '#cccccc', lineWidth = 0.5) {
+function drawGrid() {
     gridCtx.save(); // 保存当前网格画布状态
-    gridCtx.strokeStyle = lineColor;
-    gridCtx.lineWidth = lineWidth;
+    gridCtx.strokeStyle = '#cccccc';
+    gridCtx.lineWidth = 0.5;
 
     // 绘制垂直线
-    for (let x = 0; x <= canvasSize; x += pixelSize) {
+    for (let x = 0; x <= canvas.width; x += pixelSize) {
         gridCtx.beginPath();
         gridCtx.moveTo(x, 0);
-        gridCtx.lineTo(x, canvasSize);
+        gridCtx.lineTo(x, canvas.height);
         gridCtx.stroke();
     }
 
     // 绘制水平线
-    for (let y = 0; y <= canvasSize; y += pixelSize) {
+    for (let y = 0; y <= canvas.height; y += pixelSize) {
         gridCtx.beginPath();
         gridCtx.moveTo(0, y);
-        gridCtx.lineTo(canvasSize, y);
+        gridCtx.lineTo(canvas.width, y);
         gridCtx.stroke();
     }
     gridCtx.restore(); // 恢复网格画布状态
@@ -85,7 +142,7 @@ function toggleGrid() {
 }
 
 function redrawGrid() {
-    gridCtx.clearRect(0, 0, canvasSize, canvasSize); // 清空网格画布
+    gridCtx.clearRect(0, 0, canvas.width, canvas.height); // 清空网格画布
     if (showGrid) {
         drawGrid();
     }
@@ -177,11 +234,23 @@ document.getElementById('clear-canvas').addEventListener('click', () => {
 
 // Handle mouse events
 canvas.addEventListener('mousedown', (e) => {
+	const x = Math.floor(e.offsetX / pixelSize);
+    const y = Math.floor(e.offsetY / pixelSize);
+
+    // 在光标画布上绘制笔刷预览框
+    drawBrushPreview(x, y);
+
     isDrawing = true; // Start drawing
     handleDraw(e); // Draw the initial pixel
 });
 
 canvas.addEventListener('mousemove', (e) => {
+	const x = Math.floor(e.offsetX / pixelSize);
+    const y = Math.floor(e.offsetY / pixelSize);
+
+    // 在光标画布上绘制笔刷预览框
+    drawBrushPreview(x, y);
+	
     if (isDrawing) { // Only draw if the mouse is pressed
         handleDraw(e);
     }
@@ -202,27 +271,93 @@ function handleDraw(e) {
     const x = Math.floor(e.offsetX / pixelSize);
     const y = Math.floor(e.offsetY / pixelSize);
 
-    if (x < 0 || x >= gridSize || y < 0 || y >= gridSize) return;
+    if (x < 0 || x >= canvas.width / pixelSize || 
+        y < 0 || y >= canvas.height / pixelSize) return;
 
     if (currentTool === 'pencil') {
-        drawPixel(x, y);
+        drawPixelwBrushSize(x, y);
     } else if (currentTool === 'bucket') {
         fillArea(x, y);
+        saveState(); 
     } else if (currentTool === 'eraser') {
         erasePixel(x, y); 
     } else if (currentTool === 'colorpicker') {
         pickColor(x, y);
     }
-
-    // saveState(); 
 }
 
 // Draw a single pixel
+function drawPixelwBrushSize(x, y) {
+    ctx.fillStyle = currentColor;
+
+	const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
+
+    ctx.fillRect(
+        startX * pixelSize, // 起始 X
+        startY * pixelSize, // 起始 Y
+        brushSize * pixelSize, // 宽度
+        brushSize * pixelSize // 高度
+    );
+}
+
+function drawPixelwBrushSize(x, y) {
+    ctx.fillStyle = currentColor;
+
+	const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
+
+    ctx.fillRect(
+        startX * pixelSize, // 起始 X
+        startY * pixelSize, // 起始 Y
+        brushSize * pixelSize, // 宽度
+        brushSize * pixelSize // 高度
+    );
+}
+
 function drawPixel(x, y) {
     ctx.fillStyle = currentColor;
     ctx.fillRect(
         x * pixelSize, // 起始 X
         y * pixelSize, // 起始 Y
+        pixelSize, // 宽度
+        pixelSize // 高度
+    );
+}
+
+// 绘制笔刷预览框
+function drawBrushPreview(x, y) {
+	cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+
+    // 找到光标所在的格子
+    const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
+
+    // 绘制矩形框
+    cursorCtx.strokeStyle = 'rgba(255, 0, 0, 0.75)'; // 框的颜色和透明度
+    cursorCtx.lineWidth = 1.5; // 框的线宽
+    cursorCtx.strokeRect(
+        startX * pixelSize, // 起始 X
+        startY * pixelSize, // 起始 Y
+        pixelSize, // 宽度
+        pixelSize // 高度
+    );
+}
+
+// 绘制笔刷预览框
+function drawBrushPreview(x, y) {
+	cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+
+    // 找到光标所在的格子
+    const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
+
+    // 绘制矩形框
+    cursorCtx.strokeStyle = 'rgba(255, 0, 0, 0.75)'; // 框的颜色和透明度
+    cursorCtx.lineWidth = 1.5; // 框的线宽
+    cursorCtx.strokeRect(
+        startX * pixelSize, // 起始 X
+        startY * pixelSize, // 起始 Y
         brushSize * pixelSize, // 宽度
         brushSize * pixelSize // 高度
     );
@@ -231,8 +366,6 @@ function drawPixel(x, y) {
 // Flood fill algorithm (bucket tool)
 function fillArea(x, y) {
     const targetColor = getPixelColor(x, y);
-    console.log('Target Color:', targetColor); // 调试日志
-    console.log('Current Color:', currentColor); // 调试日志
 
     if (!targetColor || targetColor === currentColor) return; // 如果目标颜色为空或与当前颜色相同，直接返回
 
@@ -247,7 +380,8 @@ function fillArea(x, y) {
         const pixelKey = `${currentX},${currentY}`;
 
         // 如果越界或者已填充，跳过
-        if (currentX < 0 || currentX >= gridSize || currentY < 0 || currentY >= gridSize || filled.has(pixelKey)) {
+        if (currentX < 0 || currentX >= canvas.width /pixelSize || 
+            currentY < 0 || currentY >= ctx.height /pixelSize || filled.has(pixelKey)) {
             continue;
         }
 
@@ -269,8 +403,11 @@ function fillArea(x, y) {
 
 // Erase the pixel to white
 function erasePixel(x, y) {
+	const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
     ctx.globalCompositeOperation = 'destination-out'; // 让填充变透明
-    ctx.fillRect(x * pixelSize, y * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
+    ctx.fillRect(startX * pixelSize, startY * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
+    ctx.fillRect(startX * pixelSize, startY * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
     ctx.globalCompositeOperation = 'source-over'; // 恢复正常绘制模式
 }
 
@@ -295,7 +432,8 @@ function rgbToHex(rgb) {
 
 // Get the color of a specific pixel in HEX format
 function getPixelColor(x, y) {
-    const imageData = ctx.getImageData(x * pixelSize, y * pixelSize, 1, 1).data;
+    // // 获取中心像素的颜色
+	const imageData = ctx.getImageData(x * pixelSize, y * pixelSize, 1, 1).data;
     const alpha = imageData[3]; // Alpha channel
 
     if (alpha === 0) {
