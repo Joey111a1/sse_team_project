@@ -180,6 +180,7 @@ pencilTool.addEventListener('click', () => {
     setActiveTool(pencilTool); // Choose Pencil
     bucketTool.classList.remove('active'); 
     eraserTool.classList.remove('active'); 
+	colorpickerTool.classList.remove('active');
     brushPanel.style.display = 'flex'; // 显示 Panel
 });
 
@@ -188,6 +189,7 @@ bucketTool.addEventListener('click', () => {
     setActiveTool(bucketTool); // 选中 Bucket
     pencilTool.classList.remove('active');
     eraserTool.classList.remove('active');
+	colorpickerTool.classList.remove('active');
     brushPanel.style.display = 'none'; // 隐藏 Panel
 });
 
@@ -196,6 +198,7 @@ eraserTool.addEventListener('click', () => {
     setActiveTool(eraserTool); // 选中 Eraser
     pencilTool.classList.remove('active'); 
     bucketTool.classList.remove('active'); 
+	colorpickerTool.classList.remove('active');
     brushPanel.style.display = 'flex'; // 显示 Panel
 });
 
@@ -204,6 +207,7 @@ colorpickerTool.addEventListener('click', () => {
     setActiveTool(colorpickerTool); // 选中 Color Picker
     pencilTool.classList.remove('active'); 
     bucketTool.classList.remove('active'); 
+	eraserTool.classList.remove('active');
     brushPanel.style.display = 'none'; // 隐藏 Panel
 });
 
@@ -321,8 +325,8 @@ function drawBrushPreview(x, y) {
     cursorCtx.strokeRect(
         startX * pixelSize, // 起始 X
         startY * pixelSize, // 起始 Y
-        pixelSize, // 宽度
-        pixelSize // 高度
+        brushSize * pixelSize, // 宽度
+        brushSize * pixelSize // 高度
     );
 }
 
