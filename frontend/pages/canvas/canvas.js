@@ -207,7 +207,7 @@ colorpickerTool.addEventListener('click', () => {
     setActiveTool(colorpickerTool); // 选中 Color Picker
     pencilTool.classList.remove('active'); 
     bucketTool.classList.remove('active'); 
-	colorpickerTool.classList.remove('active');
+	eraserTool.classList.remove('active');
     brushPanel.style.display = 'none'; // 隐藏 Panel
 });
 
@@ -301,44 +301,11 @@ function drawPixelwBrushSize(x, y) {
     );
 }
 
-function drawPixelwBrushSize(x, y) {
-    ctx.fillStyle = currentColor;
-
-	const startX = x - Math.floor(brushSize / 2);
-	const startY = y - Math.floor(brushSize / 2);
-
-    ctx.fillRect(
-        startX * pixelSize, // 起始 X
-        startY * pixelSize, // 起始 Y
-        brushSize * pixelSize, // 宽度
-        brushSize * pixelSize // 高度
-    );
-}
-
 function drawPixel(x, y) {
     ctx.fillStyle = currentColor;
     ctx.fillRect(
         x * pixelSize, // 起始 X
         y * pixelSize, // 起始 Y
-        pixelSize, // 宽度
-        pixelSize // 高度
-    );
-}
-
-// 绘制笔刷预览框
-function drawBrushPreview(x, y) {
-	cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-
-    // 找到光标所在的格子
-    const startX = x - Math.floor(brushSize / 2);
-	const startY = y - Math.floor(brushSize / 2);
-
-    // 绘制矩形框
-    cursorCtx.strokeStyle = 'rgba(255, 0, 0, 0.75)'; // 框的颜色和透明度
-    cursorCtx.lineWidth = 1.5; // 框的线宽
-    cursorCtx.strokeRect(
-        startX * pixelSize, // 起始 X
-        startY * pixelSize, // 起始 Y
         pixelSize, // 宽度
         pixelSize // 高度
     );
@@ -381,7 +348,7 @@ function fillArea(x, y) {
 
         // 如果越界或者已填充，跳过
         if (currentX < 0 || currentX >= canvas.width /pixelSize || 
-            currentY < 0 || currentY >= ctx.height /pixelSize || filled.has(pixelKey)) {
+            currentY < 0 || currentY >= canvas.height /pixelSize || filled.has(pixelKey)) {
             continue;
         }
 
@@ -719,7 +686,7 @@ function flipVertical() {
 }
 
 // 绑定按钮点击事件
-document.getElementById('horizonal-flip').addEventListener('click', flipHorizontal);
+document.getElementById('horizontal-flip').addEventListener('click', flipHorizontal);
 document.getElementById('vertical-flip').addEventListener('click', flipVertical);
 
 // 缩放画布
