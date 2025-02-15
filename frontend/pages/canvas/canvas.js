@@ -240,11 +240,23 @@ canvas.addEventListener('mousedown', (e) => {
     // 在光标画布上绘制笔刷预览框
     drawBrushPreview(x, y);
 
+	const x = Math.floor(e.offsetX / pixelSize);
+    const y = Math.floor(e.offsetY / pixelSize);
+
+    // 在光标画布上绘制笔刷预览框
+    drawBrushPreview(x, y);
+
     isDrawing = true; // Start drawing
     handleDraw(e); // Draw the initial pixel
 });
 
 canvas.addEventListener('mousemove', (e) => {
+	const x = Math.floor(e.offsetX / pixelSize);
+    const y = Math.floor(e.offsetY / pixelSize);
+
+    // 在光标画布上绘制笔刷预览框
+    drawBrushPreview(x, y);
+	
 	const x = Math.floor(e.offsetX / pixelSize);
     const y = Math.floor(e.offsetY / pixelSize);
 
@@ -276,6 +288,7 @@ function handleDraw(e) {
 
     if (currentTool === 'pencil') {
         drawPixelwBrushSize(x, y);
+        drawPixelwBrushSize(x, y);
     } else if (currentTool === 'bucket') {
         fillArea(x, y);
         saveState(); 
@@ -301,11 +314,44 @@ function drawPixelwBrushSize(x, y) {
     );
 }
 
+function drawPixelwBrushSize(x, y) {
+    ctx.fillStyle = currentColor;
+
+	const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
+
+    ctx.fillRect(
+        startX * pixelSize, // 起始 X
+        startY * pixelSize, // 起始 Y
+        brushSize * pixelSize, // 宽度
+        brushSize * pixelSize // 高度
+    );
+}
+
 function drawPixel(x, y) {
     ctx.fillStyle = currentColor;
     ctx.fillRect(
         x * pixelSize, // 起始 X
         y * pixelSize, // 起始 Y
+        pixelSize, // 宽度
+        pixelSize // 高度
+    );
+}
+
+// 绘制笔刷预览框
+function drawBrushPreview(x, y) {
+	cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+
+    // 找到光标所在的格子
+    const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
+
+    // 绘制矩形框
+    cursorCtx.strokeStyle = 'rgba(255, 0, 0, 0.75)'; // 框的颜色和透明度
+    cursorCtx.lineWidth = 1.5; // 框的线宽
+    cursorCtx.strokeRect(
+        startX * pixelSize, // 起始 X
+        startY * pixelSize, // 起始 Y
         pixelSize, // 宽度
         pixelSize // 高度
     );
@@ -372,7 +418,10 @@ function fillArea(x, y) {
 function erasePixel(x, y) {
 	const startX = x - Math.floor(brushSize / 2);
 	const startY = y - Math.floor(brushSize / 2);
+	const startX = x - Math.floor(brushSize / 2);
+	const startY = y - Math.floor(brushSize / 2);
     ctx.globalCompositeOperation = 'destination-out'; // 让填充变透明
+    ctx.fillRect(startX * pixelSize, startY * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
     ctx.fillRect(startX * pixelSize, startY * pixelSize, brushSize * pixelSize, brushSize * pixelSize);
     ctx.globalCompositeOperation = 'source-over'; // 恢复正常绘制模式
 }
@@ -398,6 +447,13 @@ function rgbToHex(rgb) {
 
 // Get the color of a specific pixel in HEX format
 function getPixelColor(x, y) {
+    // 计算中心像素的位置
+    // const centerX = Math.floor(x / brushSize) * brushSize + Math.floor(brushSize / 2);
+    // const centerY = Math.floor(y / brushSize) * brushSize + Math.floor(brushSize / 2);
+
+    // // 获取中心像素的颜色
+    // const imageData = ctx.getImageData(centerX, centerY, 1, 1).data;
+	const imageData = ctx.getImageData(x * pixelSize, y * pixelSize, 1, 1).data;
     // 计算中心像素的位置
     // const centerX = Math.floor(x / brushSize) * brushSize + Math.floor(brushSize / 2);
     // const centerY = Math.floor(y / brushSize) * brushSize + Math.floor(brushSize / 2);
