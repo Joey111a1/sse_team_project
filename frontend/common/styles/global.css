@@ -1,0 +1,37 @@
+header {
+    position: fixed; /* 固定定位 */
+    top: 0; /* 固定在页面顶部 */
+    left: 0; /* 从页面最左侧开始 */
+    width: 100%; /* 背景与页面一样宽 */
+    text-align: center; /* 文字水平居中 */
+    font-weight: bold; /* 文字加粗 */
+    margin: 0; /* 移除默认的外边距 */
+    font-size: 24px; /* 调整字体大小 */
+    z-index: 1000; /* 确保标题在最上层 */
+    background-color: #c5c5c5; /* 背景色 */
+    padding: 10px 0; /* 上下内边距 10px，左右内边距 0 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 确保 body 占满整个视口高度 */
+    overflow: hidden; /* 防止滚动条 */
+}
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 26px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
