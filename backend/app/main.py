@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import users, history
+from app.routes import users, history, share
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -7,6 +7,7 @@ app = FastAPI()
 # 注册 API 路由
 app.include_router(users.router, prefix="/api/users")
 app.include_router(history.router, prefix="/api")
+app.include_router(share.router, prefix="/api")
 
 @app.get("/")
 def read_root():
