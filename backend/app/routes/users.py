@@ -3,8 +3,11 @@ from sqlalchemy.orm import Session
 from app import models, schemas, auth
 from app.database import SessionLocal
 from app.database import get_db
+from fastapi.security import OAuth2PasswordBearer
 
 router = APIRouter()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/login")
 
 def get_db():
     db = SessionLocal()
@@ -44,3 +47,17 @@ def login_user(user_data: schemas.UserLogin, db: Session = Depends(get_db)):
     access_token = auth.create_access_token(user.email)
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/me", response_model=schemas.UserResponse)
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    # 解码 JWT token 获取 email
+    email = auth.verify_access_token(token)
+    if email is None:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    # 在数据库中查找用户
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user  # 返回用户数据

@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from typing import List
 
 class UserCreate(BaseModel):
     username: str
@@ -16,3 +17,6 @@ class UserResponse(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class HistorySaveRequest(BaseModel):
+    imageData: List[int]  # 画布像素数据，前端传入的
