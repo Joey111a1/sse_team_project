@@ -20,7 +20,7 @@ document.getElementById('login-button').addEventListener('click', async () => {
 
     try {
         // 发送登录请求
-        const response = await fetch('/login', {
+        const response = await fetch('http://127.0.0.1:8000/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,7 +43,8 @@ document.getElementById('login-button').addEventListener('click', async () => {
             localStorage.setItem('access_token', data.access_token);
 
             // 跳转到欢迎页面
-            window.location.href = '/welcome.html';
+            window.location.href = "/frontend/pages/welcome/welcome.html";
+;
         } else {
             // 处理错误响应
             const error = await response.json();
@@ -64,7 +65,7 @@ document.getElementById('register-button').addEventListener('click', async () =>
     const password = document.getElementById('register-password').value;
 
     try {
-		const response = await fetch('http://localhost:3000/register', {
+		const response = await fetch('http://127.0.0.1:8000/api/users/register', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -82,7 +83,7 @@ document.getElementById('register-button').addEventListener('click', async () =>
 			const data = await response.json();
 			console.log("Registration successful:", data);
 			localStorage.setItem('access_token', data.access_token);
-			window.location.href = '/welcome.html'; // Redirect to welcome page
+            window.location.href = "/frontend/pages/welcome/welcome.html";
 		} else {
 			const error = await response.json();
 			console.error("Registration failed:", error);
