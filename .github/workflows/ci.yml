@@ -19,6 +19,6 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_ISLAND_0F6993C03 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "./frontend/pages/login"     # Path to your frontend source code
+          app_location: "./frontend"     # Path to your frontend source code
           output_location: "."      # Build output (e.g., `dist/` or `build/`)
           skip_app_build: true         # Skip build if already done in previous step
