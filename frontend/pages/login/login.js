@@ -20,7 +20,7 @@ document.getElementById('login-button').addEventListener('click', async () => {
 
     try {
         // 发送登录请求
-        const response = await fetch('/api/users/login', {
+        const response = await fetch('https://pixel-art-experiment.azurewebsites.net/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ document.getElementById('register-button').addEventListener('click', async () =>
     const password = document.getElementById('register-password').value;
 
     try {
-		const response = await fetch('/api/users/register', {
+		const response = await fetch('https://pixel-art-experiment.azurewebsites.net/api/users/register', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
