@@ -32,6 +32,15 @@ document.getElementById('login-button').addEventListener('click', async () => {
         });
 
         console.log("Login response:", response);
+        
+        // additional logging
+        const responseText = await response.text();
+        console.log("Raw response:", responseText);
+
+        if (!responseText) {
+            document.getElementById('login-error').textContent = "Empty response from server.";
+            return;
+        }
 
         // 检查响应状态
         if (response.ok) {
