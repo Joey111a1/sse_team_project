@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // if (username) {
     //     usernameDisplay.textContent = username; // 显示用户名
     // } else {
-    //     window.location.href = '../login/login.html'; // 如果没有用户名，跳转到登录页面
+    //     window.location.href = '../login/index.html'; // 如果没有用户名，跳转到登录页面
     // }
 
     // 获取按钮元素
