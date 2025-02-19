@@ -1,0 +1,6 @@
+{
+    "navigationFallback": {
+      "rewrite": "/pages/login/index.html",
+      "exclude": ["/assets/*", "/common/*", "/api/*"]
+    }
+  }
