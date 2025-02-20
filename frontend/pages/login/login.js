@@ -44,12 +44,20 @@ document.getElementById('login-button').addEventListener('click', async () => {
 
             // 跳转到欢迎页面
             window.location.href = "../welcome/welcome.html";
-            
+;
         } else {
             // 处理错误响应
             const error = await response.json();
             console.error("Login failed:", error);
-            document.getElementById('login-error').textContent = error.detail;
+
+            if (Array.isArray(error.detail)) {
+                const messages = error.detail.map(err => err.msg).join('; ');
+                document.getElementById('login-error').textContent = messages;
+              } else if (typeof error.detail === 'string') {
+                document.getElementById('login-error').textContent = error.detail;
+              } else {
+                document.getElementById('login-error').textContent = JSON.stringify(error);
+              }
         }
     } catch (error) {
         // 捕获并处理异常
@@ -87,7 +95,15 @@ document.getElementById('register-button').addEventListener('click', async () =>
 		} else {
 			const error = await response.json();
 			console.error("Registration failed:", error);
-			document.getElementById('register-error').textContent = error.detail;
+
+			if (Array.isArray(error.detail)) {
+                const messages = error.detail.map(err => err.msg).join('; ');
+                document.getElementById('register-error').textContent = messages;
+              } else if (typeof error.detail === 'string') {
+                document.getElementById('register-error').textContent = error.detail;
+              } else {
+                document.getElementById('register-error').textContent = JSON.stringify(error);
+              }
 		}
 	} catch (error) {
 		console.error("Register error:", error);
