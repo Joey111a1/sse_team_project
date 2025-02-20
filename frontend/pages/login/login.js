@@ -32,15 +32,6 @@ document.getElementById('login-button').addEventListener('click', async () => {
         });
 
         console.log("Login response:", response);
-        
-        // additional logging
-        const responseText = await response.text();
-        console.log("Raw response:", responseText);
-
-        if (!responseText) {
-            document.getElementById('login-error').textContent = "Empty response from server.";
-            return;
-        }
 
         // 检查响应状态
         if (response.ok) {
@@ -53,7 +44,7 @@ document.getElementById('login-button').addEventListener('click', async () => {
 
             // 跳转到欢迎页面
             window.location.href = "../welcome/welcome.html";
-;
+            
         } else {
             // 处理错误响应
             const error = await response.json();
