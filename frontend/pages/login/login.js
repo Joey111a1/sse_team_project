@@ -43,7 +43,7 @@ document.getElementById('login-button').addEventListener('click', async () => {
             localStorage.setItem('access_token', data.access_token);
 
             // 跳转到欢迎页面
-            window.location.href = "/frontend/pages/welcome/welcome.html";
+            window.location.href = "../welcome/welcome.html";
 ;
         } else {
             // 处理错误响应
@@ -83,7 +83,7 @@ document.getElementById('register-button').addEventListener('click', async () =>
 			const data = await response.json();
 			console.log("Registration successful:", data);
 			localStorage.setItem('access_token', data.access_token);
-            window.location.href = "/frontend/pages/welcome/welcome.html";
+            window.location.href = "../welcome/welcome.html";
 		} else {
 			const error = await response.json();
 			console.error("Registration failed:", error);
