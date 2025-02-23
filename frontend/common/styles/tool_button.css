@@ -1,0 +1,25 @@
+.tool-button {
+    width: 40px; /* 按钮宽度 */
+    height: 40px; /* 按钮高度 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9; /* 默认背景色 */
+    border: 1px solid #ccc; /* 边框 */
+    border-radius: 5px; /* 圆角 */
+    cursor: pointer;
+    transition: background-color 0.2s; /* 背景色变化动画 */
+}
+
+.tool-button.active {
+    background-color: #28a745; /* 选中时的背景色 */
+}
+
+.tool-button:hover {
+    background-color: #e0e0e0; /* 鼠标悬停时的背景色 */
+}
+
+.tool-button img {
+    width: 24px; /* 图标大小 */
+    height: 24px;
+}
