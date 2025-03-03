@@ -42,3 +42,14 @@ class ShareResponse(BaseModel):
     platform: str
     share_link: str
     image_url: str
+
+class CanvasStateRequest(BaseModel):
+    state_data: str  # 前端传来的画布状态数据，格式由你定义（如 JSON 或 Base64）
+
+class CanvasStateResponse(BaseModel):
+    id: int
+    state_data: str
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True  # Pydantic v1; 若使用 Pydantic v2, 可用 from_attributes = True
