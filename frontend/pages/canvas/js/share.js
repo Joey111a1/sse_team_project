@@ -151,7 +151,7 @@ sharePosterButton.addEventListener('click', async function () {
         const imageURL = result.image_url;   // 图片 URL
 
         // 打开新窗口并显示分享页面
-        window.open(`share-poster.html?image=${encodeURIComponent(imageURL)}`);
+        window.open(`pages/share/share-poster.html?image=${encodeURIComponent(imageURL)}`);
     } catch (error) {
         console.error('Failed to generate image:', error);
         alert('Failed to generate image. Please try again.');
