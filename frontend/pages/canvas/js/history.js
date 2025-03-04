@@ -53,7 +53,7 @@ function saveState() {
 
     if (history.length >= maxHistorySize) {
         history.shift();
-        syncWithBackend();
+        syncWithBackend(currentState);
     }
     history.push(currentState);
     redoStack = [];
@@ -76,7 +76,7 @@ function arraysEqual(a, b) {
 
 function syncWithBackend(state) {
     const imageData = Array.from(state.data);
-    fetch('/saveHistory', {
+    fetch('https://pixel-art.azurewebsites.net/api/history/save', {
         method: 'POST',
         body: JSON.stringify({ imageData }),
         headers: { 'Content-Type': 'application/json' }
