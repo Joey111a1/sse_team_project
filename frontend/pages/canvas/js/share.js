@@ -94,7 +94,7 @@ function getRandomFont() {
 }
 
 function getDominantColor(canvas) {
-    // const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     const colorCount = {};
 
