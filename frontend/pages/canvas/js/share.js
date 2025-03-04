@@ -133,7 +133,7 @@ sharePosterButton.addEventListener('click', async function () {
         };
 
         // 发送 POST 请求到后端
-        const response = await fetch('http://127.0.0.1:8000/api/share', {
+        const response = await fetch('pixel-art.azurewebsites.net/api/share', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
