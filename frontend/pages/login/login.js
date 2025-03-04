@@ -20,7 +20,7 @@ document.getElementById('login-button').addEventListener('click', async () => {
 
     try {
         // 发送登录请求
-        const response = await fetch('https://pixel-art-experiment.azurewebsites.net/api/users/login', {
+        const response = await fetch('https://pixel-art.azurewebsites.net/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,19 +46,19 @@ document.getElementById('login-button').addEventListener('click', async () => {
             window.location.href = "../welcome/welcome.html";
 ;
         } else {
-            // 处理错误响应
             const error = await response.json();
             console.error("Login failed:", error);
-
+        
             if (Array.isArray(error.detail)) {
                 const messages = error.detail.map(err => err.msg).join('; ');
                 document.getElementById('login-error').textContent = messages;
-              } else if (typeof error.detail === 'string') {
+            } else if (typeof error.detail === 'string') {
                 document.getElementById('login-error').textContent = error.detail;
-              } else {
+            } else {
                 document.getElementById('login-error').textContent = JSON.stringify(error);
-              }
+            }
         }
+               
     } catch (error) {
         // 捕获并处理异常
         console.error("Login error:", error);
@@ -73,7 +73,7 @@ document.getElementById('register-button').addEventListener('click', async () =>
     const password = document.getElementById('register-password').value;
 
     try {
-		const response = await fetch('https://pixel-art-experiment.azurewebsites.net/api/users/register', {
+		const response = await fetch('https://pixel-art.azurewebsites.net/api/users/register', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -93,18 +93,18 @@ document.getElementById('register-button').addEventListener('click', async () =>
 			localStorage.setItem('access_token', data.access_token);
             window.location.href = "../welcome/welcome.html";
 		} else {
-			const error = await response.json();
-			console.error("Registration failed:", error);
-
-			if (Array.isArray(error.detail)) {
+            const error = await response.json();
+            console.error("Registration failed:", error);
+        
+            if (Array.isArray(error.detail)) {
                 const messages = error.detail.map(err => err.msg).join('; ');
                 document.getElementById('register-error').textContent = messages;
-              } else if (typeof error.detail === 'string') {
+            } else if (typeof error.detail === 'string') {
                 document.getElementById('register-error').textContent = error.detail;
-              } else {
+            } else {
                 document.getElementById('register-error').textContent = JSON.stringify(error);
-              }
-		}
+            }
+        }
 	} catch (error) {
 		console.error("Register error:", error);
 		document.getElementById('register-error').textContent = "An error occurred. Please try again.";

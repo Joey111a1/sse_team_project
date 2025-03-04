@@ -4,22 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixel Art Editor</title>
-	<link rel="stylesheet" href="../../common/styles/global.css">
-    <link rel="stylesheet" href="canvas.css">
+	<link rel="stylesheet" href="../../common/styles/common.css">
+	<link rel="stylesheet" href="../../common/styles/tool_button.css">
+    <link rel="stylesheet" href="css/canvas.css">
+	<link rel="stylesheet" href="css/fonts.css">
+	<link rel="stylesheet" href="css/modal.css">
+	<link rel="stylesheet" href="css/overlay.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sigmar&family=Annie+Use+Your+Telescope&family=Ribeye+Marrow&family=Knewave&family=Dokdo&family=Shizuru&family=Henny+Penny&family=Jolly+Lodger&family=Borel&display=swap" rel="stylesheet">
 </head>
 <body>
 	<!-- 模态窗口 -->
     <div id="canvas-size-modal" class="modal">
-        <div class="modal-content">
-            <h1>Set Canvas Size</h1>
-            <label for="canvas-width">Width (in pixels):</label>
-            <input type="number" id="canvas-width" min="2" max="80" value="40">
-            <label for="canvas-height">Height (in pixels):</label>
-            <input type="number" id="canvas-height" min="2" max="80" value="40">
-            <button id="confirm-canvas-size">Confirm</button>
+		<div class="modal-content">
+			<h1>Set Canvas Size</h1>
+			<!-- 画布宽度输入 -->
+			<label for="canvas-width">Width (in pixels):</label>
+			<input type="number" id="canvas-width" min="2" max="80" value="40">
+			<!-- 画布高度输入 -->
+			<label for="canvas-height">Height (in pixels):</label>
+			<input type="number" id="canvas-height" min="2" max="80" value="40">
+			<!-- 作品名输入 -->
+			<label for="artwork-id">Artwork ID:</label>
+			<input type="text" id="artwork-id" placeholder="Enter artwork name">
+			<!-- 确认按钮 -->
+			<button id="confirm-canvas-size">Confirm</button>
+			<!-- 错误提示 -->
 			<p id="canvas-size-error" class="error-message"></p>
-        </div>
-    </div>
+		</div>
+	</div>
+
+	<!-- 画布 -->
+	<div class="canvas-container">
+		<canvas id="pixel-canvas"></canvas>
+		<canvas id="grid-canvas"></canvas>
+		<canvas id="cursor-canvas"></canvas>
+	</div>
 
 	<!-- Canvas -->
     <div class="container">
@@ -53,12 +74,6 @@
 					<!-- 更多颜色 -->
 				</div>
             </div>
-            <!-- 画布 -->
-            <div class="canvas-container">
-				<canvas id="pixel-canvas"></canvas>
-				<canvas id="grid-canvas"></canvas>
-				<canvas id="cursor-canvas"></canvas>
-			</div>
             <!-- 右边面板：清空画布 -->
             <div class="right-panel">
 				<div id="undo-tool" class="tool-button">
@@ -68,7 +83,6 @@
 					<img src="../../assets/icons/redo-icon.png" alt="Redo">
 				</div>
                 <button id="clear-canvas">Clear</button>
-				<button id="export-png">Export</button>
             </div>
         
 			<!-- Bottom -->
@@ -86,7 +100,7 @@
 					<img src="../../assets/icons/horizontal-icon.png" alt="Horizontal-flip">
 				</div> 
 				<div id="vertical-flip" class="tool-button">
-					<img src="../../assets/icons/vertical-icon.png" alt="Rotation-right">
+					<img src="../../assets/icons/vertical-icon.png" alt="Vertical-flip">
 				</div> 
 				<div id="zoomin-tool" class="tool-button">
 					<img src="../../assets/icons/plus-icon.png" alt="Zoom-in">
@@ -102,7 +116,40 @@
 		<div class="canvas-size-display">
 			Width: <span id="canvas-width-display">0</span>px | Height: <span id="canvas-height-display">0</span>px
 		</div>
+
+		<!-- Upper right  -->
+		<div class="share-button-container">
+			<div class="tool-button" id="uploadButton">
+				<img src="../../assets/icons/upload-icon.png" alt="Upload">
+			</div>
+			<div class="tool-button" id="shareButton">
+				<img src="../../assets/icons/share-icon.png" alt="Share">
+			</div>
+		</div>
+
+		<div id="overlay" class="overlay">
+			<div class="overlay-content">
+				<!-- 关闭按钮 -->
+				<div class="tool-button" id="closeOverlayButton">
+					<img src="../../assets/icons/close-icon.png" alt="Close" /> <!-- 替换为你的关闭图标 -->
+				</div>
+				<!-- 新的 canvas -->
+				<canvas id="previewCanvas"></canvas>
+				<!-- 两个按钮 -->
+				<div class="button-container">
+					<button id="sharePosterButton">Share Current Poster</button>
+					<button id="exportPngButton">Export Canvas to PNG</button>
+				</div>
+			</div>
+		</div>
     </div>
-    <script src="canvas.js"></script>
+	<script src="js/canvas.js"></script>
+	<script src="js/transform.js"></script>
+	<script src="js/history.js"></script>
+	<script src="js/modal.js"></script>
+	<script src="js/share.js"></script>
+	<script src="js/tools.js"></script>
+	<script src="js/upload.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.0/dist/browser-image-compression.min.js"></script>
 </body>
 </html>
