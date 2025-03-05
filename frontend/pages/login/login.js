@@ -38,12 +38,15 @@ document.getElementById('login-button').addEventListener('click', async () => {
             // 解析响应数据
             const data = await response.json();
             console.log("Login successful:", data);
+            const { access_token, user_id, username } = data;
 
             // 保存访问令牌到 localStorage
-            localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('access_token', access_token);
+            localStorage.setItem('user_id', user_id);
+            localStorage.setItem('username', username);
 
             // 跳转到欢迎页面
-            window.location.href = "../welcome/welcome.html";
+            window.location.href = `../welcome/welcome.html?username=${username}`;
 ;
         } else {
             const error = await response.json();
