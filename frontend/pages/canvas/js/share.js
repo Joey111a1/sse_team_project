@@ -1,13 +1,13 @@
 // share.js
 // 获取按钮元素
+const userId = localStorage.getItem('user_id');
+const username = localStorage.getItem('username');
+
 const shareButton = document.getElementById('shareButton');
 const overlay = document.getElementById('overlay');
 const previewCanvas = document.getElementById('previewCanvas');
 const sharePosterButton = document.getElementById('sharePosterButton');
 const exportPngButton = document.getElementById('exportPngButton');
-
-const userId = localStorage.getItem('user_id');
-const username = localStorage.getItem('username');
 
 shareButton.addEventListener('click', function () {
     overlay.style.display = 'flex';
@@ -60,7 +60,6 @@ async function drawPreviewCanvas() {
     const font = getRandomFont();
     const fontSizeTitle = 45;
     const fontSizeUserInfo = 30;
-    const username = username;
     const userInfo = `${username} - ${artworkId}`;
 
     try {
