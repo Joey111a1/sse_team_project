@@ -94,7 +94,7 @@ document.getElementById('register-button').addEventListener('click', async () =>
 			const data = await response.json();
 			console.log("Registration successful:", data);
 			localStorage.setItem('access_token', data.access_token);
-            window.location.href = "../welcome/welcome.html";
+            window.location.href = "login.html";
 		} else {
             const error = await response.json();
             console.error("Registration failed:", error);
