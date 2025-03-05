@@ -70,7 +70,7 @@ document.querySelectorAll('.color-palette .color').forEach(color => {
 
 // Handle mouse events
 canvas.addEventListener('mousedown', (e) => {
-    if (e.button !== 0 && !e.ctrlKey ) return;
+    if (e.button !== 0 || e.ctrlKey ) return;
 	const x = Math.floor(e.offsetX / pixelSize);
     const y = Math.floor(e.offsetY / pixelSize);
 
@@ -82,7 +82,7 @@ canvas.addEventListener('mousedown', (e) => {
 });
 
 canvas.addEventListener('mousemove', (e) => {
-    if (e.button !== 0 && !e.ctrlKey ) return;
+    if (e.button !== 0 || e.ctrlKey ) return;
 	const x = Math.floor(e.offsetX / pixelSize);
     const y = Math.floor(e.offsetY / pixelSize);
 
