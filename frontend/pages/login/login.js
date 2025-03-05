@@ -41,6 +41,8 @@ document.getElementById('login-button').addEventListener('click', async () => {
 
             // 保存访问令牌到 localStorage
             localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('user_id', data.user_id);
+            localStorage.setItem('username', data.username);
 
             // 跳转到欢迎页面
             window.location.href = "../welcome/welcome.html";

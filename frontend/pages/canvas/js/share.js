@@ -6,6 +6,9 @@ const previewCanvas = document.getElementById('previewCanvas');
 const sharePosterButton = document.getElementById('sharePosterButton');
 const exportPngButton = document.getElementById('exportPngButton');
 
+const userId = localStorage.getItem('user_id');
+const username = localStorage.getItem('username');
+
 shareButton.addEventListener('click', function () {
     overlay.style.display = 'flex';
     drawPreviewCanvas();
@@ -57,7 +60,6 @@ async function drawPreviewCanvas() {
     const font = getRandomFont();
     const fontSizeTitle = 45;
     const fontSizeUserInfo = 30;
-    const username = 'i';
     const userInfo = `${username} - ${artworkId}`;
 
     try {
@@ -127,7 +129,7 @@ sharePosterButton.addEventListener('click', async function () {
         // 构造请求体
         const requestBody = {
             history_id: artworkId,
-            user_id: 1,    // 替换为实际的 user_id
+            user_id: userId,    // 替换为实际的 user_id
             platform: "web", // 替换为实际的平台信息
             image_data: imageData, // Base64 图片数据
         };
