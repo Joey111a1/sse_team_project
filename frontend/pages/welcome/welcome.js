@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const username = urlParams.get('username');
 
     // 如果用户名存在，显示在页面上；否则跳转回登录页面
-    // if (username) {
-    //     usernameDisplay.textContent = username; // 显示用户名
-    // } else {
-    //     window.location.href = '../login/login.html'; // 如果没有用户名，跳转到登录页面
-    // }
+    if (username) {
+        usernameDisplay.textContent = username; // 显示用户名
+    } else {
+        window.location.href = '../login/login.html'; // 如果没有用户名，跳转到登录页面
+    }
 
     // 获取按钮元素
     const singlePlayerButton = document.getElementById('singlePlayer');
