@@ -155,8 +155,13 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Binding mouse events...'); // 确保事件绑定代码执行
     canvas.addEventListener('mousedown', (e) => {
         console.log('Mouse down event triggered'); // 确保事件触发
-        const x = Math.floor(e.offsetX / pixelSize);
-        const y = Math.floor(e.offsetY / pixelSize);
+        // const x = Math.floor(e.offsetX / pixelSize);
+        // const y = Math.floor(e.offsetY / pixelSize);
+        const rect = canvas.getBoundingClientRect();
+        // Adjust mouse coordinates by subtracting the canvas's top-left position
+        // and then dividing by the current scale factor.
+        const x = Math.floor((e.clientX - rect.left) / scale / pixelSize);
+        const y = Math.floor((e.clientY - rect.top) / scale / pixelSize);
 
         // 在光标画布上绘制笔刷预览框
         drawBrushPreview(x, y);
@@ -168,8 +173,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     canvas.addEventListener('mousemove', (e) => {
         console.log('Mouse move event triggered'); // 确保事件触发
-        const x = Math.floor(e.offsetX / pixelSize);
-        const y = Math.floor(e.offsetY / pixelSize);
+        // const x = Math.floor(e.offsetX / pixelSize);
+        // const y = Math.floor(e.offsetY / pixelSize);
+        const rect = canvas.getBoundingClientRect();
+        // Adjust mouse coordinates by subtracting the canvas's top-left position
+        // and then dividing by the current scale factor.
+        const x = Math.floor((e.clientX - rect.left) / scale / pixelSize);
+        const y = Math.floor((e.clientY - rect.top) / scale / pixelSize);
 
         // 在光标画布上绘制笔刷预览框
         drawBrushPreview(x, y);
