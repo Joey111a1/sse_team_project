@@ -1,6 +1,6 @@
 document.getElementById('uploadButton').addEventListener('click', async () => {
     try {
-        console.log("按钮点击事件触发");
+        console.log("Button click event triggered");
 
         // 创建文件输入元素
         const fileInput = document.createElement('input');
@@ -12,14 +12,14 @@ document.getElementById('uploadButton').addEventListener('click', async () => {
             fileInput.onchange = (e) => {
                 const file = e.target.files[0];
                 if (file) {
-                    console.log("文件选择事件触发");
+                    console.log("File selection event triggered");
                     resolve(file);
                 } else {
-                    reject(new Error("未选择文件"));
+                    reject(new Error("No file selected"));
                 }
             };
             fileInput.onerror = (error) => {
-                reject(new Error("文件选择失败", error));
+                reject(new Error("File selection failed", error));
             };
             fileInput.click();
         });
@@ -29,15 +29,15 @@ document.getElementById('uploadButton').addEventListener('click', async () => {
         const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
         if (file.size > maxSizeBytes) {
-            console.log("文件过大，开始压缩...");
+            console.log("File is too large, starting compression...");
             const compressedFile = await compressImage(file, maxSizeBytes);
             await processImage(compressedFile);
         } else {
-            console.log("文件大小合适，无需压缩");
+            console.log("File size is acceptable, no compression needed");
             await processImage(file);
         }
     } catch (error) {
-        console.error("发生错误:", error);
+        console.error("An error occurred:", error);
         alert(error.message); // 提示用户错误信息
     }
 });
@@ -48,11 +48,11 @@ async function processImage(file) {
     const imageSrc = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (event) => {
-            console.log("文件读取成功");
+            console.log("File read successfully");
             resolve(event.target.result);
         };
         reader.onerror = (error) => {
-            reject(new Error("文件读取失败", error));
+            reject(new Error("File read failed", error));
         };
         reader.readAsDataURL(file);
     });
@@ -69,7 +69,9 @@ async function processImage(file) {
     // 将图片转换为像素风
     await convertToPixelArt();
 
-    console.log("图片处理完成");
+    console.log("Image processing completed");
+    
+    saveState();
 }
 
 // 加载图片
@@ -78,11 +80,11 @@ function loadImage(src) {
         const img = new Image();
         img.crossOrigin = "Anonymous"; // 允许跨域图片
         img.onload = () => {
-            console.log("图片加载成功");
+            console.log("Image loaded successfully");
             resolve(img);
         };
         img.onerror = (error) => {
-            reject(new Error("图片加载失败", error));
+            reject(new Error("Image load failed", error));
         };
         img.src = src;
     });
@@ -122,7 +124,7 @@ async function compressImage(file, maxSizeBytes) {
                 (blob) => {
                     // 检查压缩后的文件大小
                     if (blob.size <= maxSizeBytes) {
-                        console.log("压缩成功，压缩后大小:", (blob.size / 1024 / 1024).toFixed(2), "MB");
+                        console.log("Compression successful, compressed size:", (blob.size / 1024 / 1024).toFixed(2), "MB");
                         resolve(blob);
                     } else {
                         // 如果仍然过大，继续降低质量
@@ -142,7 +144,7 @@ function compressWithQuality(canvas, maxSizeBytes, quality, resolve) {
     canvas.toBlob(
         (blob) => {
             if (blob.size <= maxSizeBytes || quality <= 0.1) {
-                console.log("压缩成功，压缩后大小:", (blob.size / 1024 / 1024).toFixed(2), "MB");
+                console.log("Compression successful, compressed size:", (blob.size / 1024 / 1024).toFixed(2), "MB");
                 resolve(blob);
             } else {
                 // 降低质量，继续压缩
@@ -276,7 +278,7 @@ function sobelEdgeDetection(imageData) {
 // 将图片转换为像素风
 async function convertToPixelArt() {
     try {
-        console.log("开始转换为像素风");
+        console.log("Starting pixel art conversion");
 
         // 获取画布上的图像数据
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -286,11 +288,11 @@ async function convertToPixelArt() {
 
         // 先应用高斯模糊
         const blurredImageData = gaussianBlur(imageData);
-        console.log("高斯模糊完成");
+        console.log("Gaussian blur completed");
 
         // 再应用 Sobel 边缘检测
         const edgeData = sobelEdgeDetection(blurredImageData);
-        console.log("Sobel 边缘检测完成");
+        console.log("Sobel edge detection completed");
 
         // 清空画布
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -307,16 +309,44 @@ async function convertToPixelArt() {
                 // 判断是否为边缘（梯度值大于阈值）
                 const isEdge = avgGradient > 64; // 阈值可以根据需要调整
 
+                // 获取当前像素块的平均 alpha 值
+                const avgAlpha = getAverageAlpha(originalData, x, y, canvas.width, canvas.height);
+
+                // 如果 alpha 值为 0，则跳过绘制（保持透明）
+                if (avgAlpha === 0) {
+                    continue;
+                }
+
                 // 如果是边缘，设置为黑色；否则使用原图的颜色
-                ctx.fillStyle = isEdge ? 'black' : `rgb(${avgColor.r}, ${avgColor.g}, ${avgColor.b})`;
+                ctx.fillStyle = isEdge ? 'black' : `rgba(${avgColor.r}, ${avgColor.g}, ${avgColor.b}, ${avgAlpha / 255})`;
                 ctx.fillRect(x, y, pixelSize, pixelSize);
             }
         }
 
-        console.log("像素风转换完成");
+        console.log("Pixel art conversion completed");
     } catch (error) {
-        console.error("像素风转换失败:", error);
+        console.error("Pixel art conversion failed:", error);
     }
+}
+
+function getAverageAlpha(data, x, y, width, height) {
+    let alphaSum = 0;
+    let count = 0;
+
+    for (let dy = 0; dy < pixelSize; dy++) {
+        for (let dx = 0; dx < pixelSize; dx++) {
+            const pixelX = x + dx;
+            const pixelY = y + dy;
+
+            if (pixelX < width && pixelY < height) {
+                const pixelIndex = (pixelY * width + pixelX) * 4;
+                alphaSum += data[pixelIndex + 3]; // alpha 值在 A 通道
+                count++;
+            }
+        }
+    }
+
+    return Math.round(alphaSum / count);
 }
 
 // 获取像素块的平均梯度值

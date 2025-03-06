@@ -20,16 +20,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // 处理 "Single Player" 按钮点击
     if (singlePlayerButton) {
         singlePlayerButton.addEventListener('click', function () {
-            // 跳转到 canvas.html（单机模式）
-            window.location.href = '../canvas/canvas.html';
+            // 跳转到 canvas.html，并添加 ?mode=single 参数
+            window.location.href = '../canvas/canvas.html?mode=single';
         });
     }
 
     // 处理 "Multiplayer" 按钮点击
     if (multiPlayerButton) {
         multiPlayerButton.addEventListener('click', function () {
-            // 跳转到 multiplayer.html（多人模式）
-            window.location.href = '../multiplayer.html';
+            // 跳转到 canvas.html，并添加 ?mode=multiplayer 参数
+            window.location.href = '../canvas/canvas.html?mode=multiplayer';
         });
     }
 });

@@ -41,8 +41,8 @@ confirmButton.addEventListener('click', () => {
     }
 
     errorMessage.textContent = "";
-    initCanvas(width, height);
     closeModal();
+    initCanvas(width, height, artworkId);
 });
 
 function closeModal() {

@@ -57,6 +57,7 @@ function saveState() {
     }
     history.push(currentState);
     redoStack = [];
+    saveCanvasState(currentState);  // 保存画布状态
 }
 
 function arraysEqual(a, b) {
