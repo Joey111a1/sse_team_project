@@ -122,6 +122,7 @@ canvas {
     background-color: white; /* 添加背景色，避免阴影与画布不匹配 */
     overflow: hidden; /* 防止内容溢出 */
     pointer-events: auto; /* 确保鼠标事件可以触发 */
+    z-index: 1;
 }
 
 #pixel-canvas,
@@ -152,7 +153,7 @@ e; /* 防止网格画布拦截事件 */
     padding: 5px 10px;
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* 添加阴影 */
-    z-index: 999; /* 确保在最上层 */
+    z-index: 998; /* 确保在最上层 */
 }
 
 /* 新增容器样式 */
