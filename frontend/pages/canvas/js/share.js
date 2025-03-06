@@ -60,7 +60,6 @@ async function drawPreviewCanvas() {
     const font = getRandomFont();
     const fontSizeTitle = 45;
     const fontSizeUserInfo = 30;
-    const username = 'i';
     const userInfo = `${username} - ${artworkId}`;
 
     try {
