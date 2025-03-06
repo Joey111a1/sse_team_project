@@ -60,6 +60,7 @@ async function drawPreviewCanvas() {
     const font = getRandomFont();
     const fontSizeTitle = 45;
     const fontSizeUserInfo = 30;
+    const username = 'i';
     const userInfo = `${username} - ${artworkId}`;
 
     try {
@@ -129,13 +130,13 @@ sharePosterButton.addEventListener('click', async function () {
         // 构造请求体
         const requestBody = {
             history_id: artworkId,
-            user_id: userId,    // 替换为实际的 user_id
+            user_id: userId,
             platform: "web", // 替换为实际的平台信息
             image_data: imageData, // Base64 图片数据
         };
 
         // 发送 POST 请求到后端
-        const response = await fetch('https://pixel-art.azurewebsites.net/api/share', {
+        const response = await fetch('https:pixel-art.azurewebsites.net/api/share', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -153,7 +154,8 @@ sharePosterButton.addEventListener('click', async function () {
         const imageURL = result.image_url;   // 图片 URL
 
         // 打开新窗口并显示分享页面
-        window.open(`../../pages/share/share-poster.html?image=${encodeURIComponent(imageURL)}`);
+        window.open(`../share/share-poster.html?image=${encodeURIComponent(imageURL)}`);
+
     } catch (error) {
         console.error('Failed to generate image:', error);
         alert('Failed to generate image. Please try again.');

@@ -55,13 +55,12 @@ document.getElementById('login-button').addEventListener('click', async () => {
             if (Array.isArray(error.detail)) {
                 const messages = error.detail.map(err => err.msg).join('; ');
                 document.getElementById('login-error').textContent = messages;
-            } else if (typeof error.detail === 'string') {
+              } else if (typeof error.detail === 'string') {
                 document.getElementById('login-error').textContent = error.detail;
-            } else {
+              } else {
                 document.getElementById('login-error').textContent = JSON.stringify(error);
-            }
-        }
-               
+              }
+        }        
     } catch (error) {
         // 捕获并处理异常
         console.error("Login error:", error);
@@ -101,13 +100,13 @@ document.getElementById('register-button').addEventListener('click', async () =>
         
             if (Array.isArray(error.detail)) {
                 const messages = error.detail.map(err => err.msg).join('; ');
-                document.getElementById('register-error').textContent = messages;
-            } else if (typeof error.detail === 'string') {
-                document.getElementById('register-error').textContent = error.detail;
-            } else {
-                document.getElementById('register-error').textContent = JSON.stringify(error);
-            }
-        }
+                document.getElementById('registration-error').textContent = messages;
+              } else if (typeof error.detail === 'string') {
+                document.getElementById('registration-error').textContent = error.detail;
+              } else {
+                document.getElementById('registration-error').textContent = JSON.stringify(error);
+              }
+        }        
 	} catch (error) {
 		console.error("Register error:", error);
 		document.getElementById('register-error').textContent = "An error occurred. Please try again.";

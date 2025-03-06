@@ -35,89 +35,82 @@
 		</div>
 	</div>
 
-	<!-- 画布 -->
-	<div class="canvas-container">
-		<canvas id="pixel-canvas"></canvas>
-		<canvas id="grid-canvas"></canvas>
-		<canvas id="cursor-canvas"></canvas>
-	</div>
-
-	<!-- Canvas -->
+	<!-- Panels -->
     <div class="container">
-        <header>Pixel Art Editor</header>
-        <div class="main-content">
-			<!-- Panel For Brush Size-->
-			<div id="brush-panel" class="brush-panel">
-				<span>Size</span>
-				<input type="range" id="brush-size" min="1" max="10" value="1">
+		<header>Pixel Art Editor</header>
+	
+		<!-- Brush Panel -->
+		<div id="brush-panel" class="brush-panel">
+			<span>Size</span>
+			<input type="range" id="brush-size" min="1" max="10" value="1">
+		</div>
+	
+		<!-- Left Panel --> 
+		<div class="left-panel">
+			<p>Tools</p>
+			<div id="pencil-tool" class="tool-button active">
+				<img src="../../assets/icons/pencil-icon.png" alt="Pencil">
 			</div>
-            <!-- 左边面板：笔刷、油漆桶、颜色选择 -->
-            <div class="left-panel">
-				<p>Tools</p>
-                <div id="pencil-tool" class="tool-button active">
-					<img src="../../assets/icons/pencil-icon.png" alt="Pencil">
-				</div>
-				<div id="bucket-tool" class="tool-button">
-					<img src="../../assets/icons/bucket-icon.png" alt="Bucket">
-				</div>
-				<div id="eraser-tool" class="tool-button">
-					<img src="../../assets/icons/eraser-icon.png" alt="Eraser">
-				</div>
-				<div id="colorpicker-tool" class="tool-button">
-					<img src="../../assets/icons/colorpicker-icon.png" alt="Color Picker">
-				</div>
-                <input type="color" id="color-picker" value="#000000">
-				<div class="color-palette">
-					<div class="color" style="background-color: #ff0000;" data-color="#ff0000"></div>
-					<div class="color" style="background-color: #00ff00;" data-color="#00ff00"></div>
-					<div class="color" style="background-color: #0000ff;" data-color="#0000ff"></div>
-					<!-- 更多颜色 -->
-				</div>
-            </div>
-            <!-- 右边面板：清空画布 -->
-            <div class="right-panel">
-				<div id="undo-tool" class="tool-button">
-					<img src="../../assets/icons/undo-icon.png" alt="Undo">
-				</div> 
-				<div id="redo-tool" class="tool-button">
-					<img src="../../assets/icons/redo-icon.png" alt="Redo">
-				</div>
-                <button id="clear-canvas">Clear</button>
-            </div>
-        
-			<!-- Bottom -->
-			<div class="bottom-panel">
-				<div id="toggle-grid" class="tool-button">
-					<img src="../../assets/icons/grid-icon.png" alt="Grid">
-				</div>
-				<div id="rotate-left" class="tool-button">
-					<img src="../../assets/icons/left-rotation-icon.png" alt="Rotation-left">
-				</div> 
-				<div id="rotate-right" class="tool-button">
-					<img src="../../assets/icons/right-rotation-icon.png" alt="Rotation-right">
-				</div> 
-				<div id="horizontal-flip" class="tool-button">
-					<img src="../../assets/icons/horizontal-icon.png" alt="Horizontal-flip">
-				</div> 
-				<div id="vertical-flip" class="tool-button">
-					<img src="../../assets/icons/vertical-icon.png" alt="Vertical-flip">
-				</div> 
-				<div id="zoomin-tool" class="tool-button">
-					<img src="../../assets/icons/plus-icon.png" alt="Zoom-in">
-				</div> 
-				<div id="zoomout-tool" class="tool-button">
-					<img src="../../assets/icons/minus-icon.png" alt="Zoom-out">
-				</div>
-				<button id="reset-canvas">Reset</button>
+			<div id="bucket-tool" class="tool-button">
+				<img src="../../assets/icons/bucket-icon.png" alt="Bucket">
+			</div>
+			<div id="eraser-tool" class="tool-button">
+				<img src="../../assets/icons/eraser-icon.png" alt="Eraser">
+			</div>
+			<div id="colorpicker-tool" class="tool-button">
+				<img src="../../assets/icons/colorpicker-icon.png" alt="Color Picker">
+			</div>
+			<input type="color" id="color-picker" value="#000000">
+			<div class="color-palette">
+				<div class="color" style="background-color: #ff0000;" data-color="#ff0000"></div>
+				<div class="color" style="background-color: #00ff00;" data-color="#00ff00"></div>
+				<div class="color" style="background-color: #0000ff;" data-color="#0000ff"></div>
 			</div>
 		</div>
-
-		<!-- 在左下角显示宽度和高度 -->
+	
+		<!-- Right Panel -->
+		<div class="right-panel">
+			<div id="undo-tool" class="tool-button">
+				<img src="../../assets/icons/undo-icon.png" alt="Undo">
+			</div>
+			<div id="redo-tool" class="tool-button">
+				<img src="../../assets/icons/redo-icon.png" alt="Redo">
+			</div>
+			<button id="clear-canvas">Clear</button>
+		</div>
+	
+		<!-- Bottom Panel -->
+		<div class="bottom-panel">
+			<div id="toggle-grid" class="tool-button">
+				<img src="../../assets/icons/grid-icon.png" alt="Grid">
+			</div>
+			<div id="rotate-left" class="tool-button">
+				<img src="../../assets/icons/left-rotation-icon.png" alt="Rotation-left">
+			</div>
+			<div id="rotate-right" class="tool-button">
+				<img src="../../assets/icons/right-rotation-icon.png" alt="Rotation-right">
+			</div>
+			<div id="horizontal-flip" class="tool-button">
+				<img src="../../assets/icons/horizontal-icon.png" alt="Horizontal-flip">
+			</div>
+			<div id="vertical-flip" class="tool-button">
+				<img src="../../assets/icons/vertical-icon.png" alt="Vertical-flip">
+			</div>
+			<div id="zoomin-tool" class="tool-button">
+				<img src="../../assets/icons/plus-icon.png" alt="Zoom-in">
+			</div>
+			<div id="zoomout-tool" class="tool-button">
+				<img src="../../assets/icons/minus-icon.png" alt="Zoom-out">
+			</div>
+			<button id="reset-canvas">Reset</button>
+		</div>
+	
+		<!-- Canvas Size Display -->
 		<div class="canvas-size-display">
 			Width: <span id="canvas-width-display">0</span>px | Height: <span id="canvas-height-display">0</span>px
 		</div>
-
-		<!-- Upper right  -->
+	
+		<!-- Share Button Container -->
 		<div class="share-button-container">
 			<div class="tool-button" id="uploadButton">
 				<img src="../../assets/icons/upload-icon.png" alt="Upload">
@@ -126,30 +119,47 @@
 				<img src="../../assets/icons/share-icon.png" alt="Share">
 			</div>
 		</div>
-
+	
+		<!-- Overlay -->
 		<div id="overlay" class="overlay">
 			<div class="overlay-content">
-				<!-- 关闭按钮 -->
 				<div class="tool-button" id="closeOverlayButton">
-					<img src="../../assets/icons/close-icon.png" alt="Close" /> <!-- 替换为你的关闭图标 -->
+					<img src="../../assets/icons/close-icon.png" alt="Close" />
 				</div>
-				<!-- 新的 canvas -->
 				<canvas id="previewCanvas"></canvas>
-				<!-- 两个按钮 -->
 				<div class="button-container">
 					<button id="sharePosterButton">Share Current Poster</button>
 					<button id="exportPngButton">Export Canvas to PNG</button>
 				</div>
 			</div>
 		</div>
-    </div>
-	<script src="js/canvas.js"></script>
+
+		<!-- 在 container 内添加多人模式面板 -->
+		<div id="multiplayer-panel" class="multiplayer-panel">
+			<div class="tool-button" id="invite-friend">
+				<img src="../../assets/icons/friend-icon.png" alt="friend-icon" />
+			</div>
+			<div class="tool-button" id="finish-drawing">
+				<img src="../../assets/icons/finish-icon.png" alt="finish-drawing" />
+			</div>
+		</div>
+		
+	</div>
+
+	<!-- 画布 -->
+	<div class="canvas-container">
+		<canvas id="pixel-canvas" ></canvas>
+		<canvas id="grid-canvas"></canvas>
+		<canvas id="cursor-canvas"></canvas>
+	</div>
+	
 	<script src="js/transform.js"></script>
-	<script src="js/history.js"></script>
+	<script src="js/canvas.js"></script>
 	<script src="js/modal.js"></script>
+	<script src="js/multiplayer.js"></script>
+	<script src="js/history.js"></script>
 	<script src="js/share.js"></script>
 	<script src="js/tools.js"></script>
 	<script src="js/upload.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.0/dist/browser-image-compression.min.js"></script>
 </body>
 </html>

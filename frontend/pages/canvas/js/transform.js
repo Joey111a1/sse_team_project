@@ -1,5 +1,4 @@
 // transform.js
-const canvasContainer = document.querySelector(".canvas-container");
 const defaultRotation = 0;
 const defaultX = 0;
 const defaultY = 0;
@@ -9,74 +8,18 @@ const defaultIsFlippedVertical = false;
 
 let defaultScale = 1;
 let scale = defaultScale;
-window.rotation = defaultRotation;
+let rotation = defaultRotation;
 let isDragging = false;
 let startX, startY;
 let translateX = defaultX, translateY = defaultY;
-window.isFlippedHorizontal = defaultIsFlippedHorizontal;
-window.isFlippedVertical = defaultIsFlippedVertical;
-
-// 更新画布变换
-function updateTransform() {
-    const canvasWidth = canvas.width * scale;
-    const canvasHeight = canvas.height * scale;
-
-    // 设置容器的尺寸
-    canvasContainer.style.width = `${canvasWidth}px`;
-    canvasContainer.style.height = `${canvasHeight}px`;
-
-    // 居中显示
-    canvasContainer.style.transform = `
-        translate(-50%, -50%) 
-        translate(${translateX}px, ${translateY}px) 
-        scale(${scale})
-    `;
-}
-
-// 拖拽画布
-canvasContainer.addEventListener('mousedown', (e) => {
-    if (e.button === 1 || e.ctrlKey) { // 中键或 Ctrl + 左键
-        isDragging = true;
-        startX = e.clientX - translateX;
-        startY = e.clientY - translateY;
-        canvasContainer.style.cursor = 'grabbing'; // 拖拽时显示抓取中光标
-    }
-});
-
-canvasContainer.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-        translateX = e.clientX - startX;
-        translateY = e.clientY - startY;
-        updateTransform(); // 更新变换
-    }
-});
-
-canvasContainer.addEventListener('mouseup', () => {
-    isDragging = false;
-    canvasContainer.style.cursor = 'grab'; // 恢复抓取光标
-});
-
-canvasContainer.addEventListener('mouseleave', () => {
-    isDragging = false;
-    canvasContainer.style.cursor = 'grab'; // 恢复抓取光标
-});
-
-// 旋转画布
-document.getElementById('rotate-left').addEventListener('click', () => {
-    rotateCanvas(canvas, ctx, -90); // 逆时针旋转 90°
-    window.rotation -= 90;
-    // updateTransform();
-});
-
-document.getElementById('rotate-right').addEventListener('click', () => {
-    rotateCanvas(canvas, ctx, 90); // 顺时针旋转 90°
-    window.rotation += 90;
-    // updateTransform();
-});
+let isFlippedHorizontal = defaultIsFlippedHorizontal;
+let isFlippedVertical = defaultIsFlippedVertical;
 
 // 旋转画布的像素数据
 function rotateCanvas(canvas, ctx, degrees) {
+    // 将负角度转换为等效的正角度
     degrees = ((degrees % 360) + 360) % 360;
+
     const width = canvas.width;
     const height = canvas.height;
 
@@ -113,15 +56,19 @@ function rotateCanvas(canvas, ctx, degrees) {
             let newX, newY, newIndex;
 
             if (degrees === 90) {
-                newX = y;
-                newY = width - x - 1;
+                // 向右旋转90度
+                newX = height - y - 1;
+                newY = x;
             } else if (degrees === 180) {
+                // 旋转180度
                 newX = width - x - 1;
                 newY = height - y - 1;
             } else if (degrees === 270) {
-                newX = height - y - 1;
-                newY = x;
+                // 向左旋转90度（或向右旋转270度）
+                newX = y;
+                newY = width - x - 1;
             } else {
+                // 不旋转
                 newX = x;
                 newY = y;
             }
@@ -163,7 +110,8 @@ function flipHorizontal(canvas,ctx) {
     }
 
     ctx.putImageData(imageData, 0, 0);
-    window.isFlippedHorizontal = !window.isFlippedHorizontal;
+    isFlippedHorizontal = !isFlippedHorizontal;
+    console.log("Canvas is transformed horizontally");
 }
 
 // 垂直翻转
@@ -187,7 +135,8 @@ function flipVertical(canvas,ctx) {
     }
 
     ctx.putImageData(imageData, 0, 0);
-    window.isFlippedVertical = !window.isFlippedVertical;
+    isFlippedVertical = !isFlippedVertical;
+    console.log("Canvas is transformed vertically");
 }
 
 
@@ -206,31 +155,24 @@ document.getElementById('zoomout-tool').addEventListener('click', () => {
 });
 
 // 重置画布
-document.getElementById('reset-canvas').addEventListener('click', () => {
+function resetCanvas() {
+    if (savedImageData) {
+        ctx.putImageData(savedImageData, 0, 0); // 恢复到保存的状态
+    }
+
+    // 重置变换参数
     translateX = defaultX;
     translateY = defaultY;
-    rotateCanvas(canvas, ctx, -window.rotation);
-    window.rotation = defaultRotation;
+    rotation = defaultRotation;
     scale = defaultScale;
-    // 如果当前是水平翻转状态，则再次翻转以恢复
-    if (window.isFlippedHorizontal) {
-        flipHorizontal(canvas,ctx);
-    }
+    isFlippedHorizontal = false;
+    isFlippedVertical = false;
 
-    // 如果当前是垂直翻转状态，则再次翻转以恢复
-    if (window.isFlippedVertical) {
-        flipVertical(canvas,ctx);
-    }
-    window.isFlippedHorizontal = false;
-    window.isFlippedVertical = false;
+    // 更新变换
     updateTransform();
-});
 
-// 绑定按钮点击事件
-document.getElementById('horizontal-flip').addEventListener('click', function () {
-    flipHorizontal(canvas, ctx);
-});
+    console.log("Canvas's transformation has been reseted");
+}
 
-document.getElementById('vertical-flip').addEventListener('click', function () {
-    flipVertical(canvas, ctx);
-});
+// 绑定重置按钮事件
+document.getElementById('reset-canvas').addEventListener('click', resetCanvas);
