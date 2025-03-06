@@ -76,7 +76,11 @@ function updateTransform() {
 
     // 更新容器的缩放
     // canvasContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    canvasContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    canvasContainer.style.transform = `
+        translate(-50%, -50%) 
+        translate(${translateX}px, ${translateY}px) 
+        scale(${scale})
+    `;
 }
 
 // 绘制网格
