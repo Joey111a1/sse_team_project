@@ -13,9 +13,6 @@ const pixelSize = 10; // Each pixel is 10x10 pixels
 
 let showGrid = true; // 控制网格显示
 let savedImageData = null; // For reset
-let isDragging = false;
-let startX, startY;
-let translateX = 0, translateY = 0;
 
 // 初始化画布
 function initCanvas(width, height, artworkId) {
