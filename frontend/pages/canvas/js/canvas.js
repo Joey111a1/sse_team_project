@@ -158,10 +158,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // const x = Math.floor(e.offsetX / pixelSize);
         // const y = Math.floor(e.offsetY / pixelSize);
         const rect = canvas.getBoundingClientRect();
+        const effectiveScale = rect.width / canvas.width;
         // Adjust mouse coordinates by subtracting the canvas's top-left position
         // and then dividing by the current scale factor.
-        const x = Math.floor((e.clientX - rect.left) / scale / pixelSize);
-        const y = Math.floor((e.clientY - rect.top) / scale / pixelSize);
+        const x = Math.floor((e.clientX - rect.left) / effectiveScale / pixelSize);
+        const y = Math.floor((e.clientY - rect.top) / effectiveScale / pixelSize);
 
         // 在光标画布上绘制笔刷预览框
         drawBrushPreview(x, y);
@@ -176,10 +177,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // const x = Math.floor(e.offsetX / pixelSize);
         // const y = Math.floor(e.offsetY / pixelSize);
         const rect = canvas.getBoundingClientRect();
+        const effectiveScale = rect.width / canvas.width;
         // Adjust mouse coordinates by subtracting the canvas's top-left position
         // and then dividing by the current scale factor.
-        const x = Math.floor((e.clientX - rect.left) / scale / pixelSize);
-        const y = Math.floor((e.clientY - rect.top) / scale / pixelSize);
+        const x = Math.floor((e.clientX - rect.left) / effectiveScale / pixelSize);
+        const y = Math.floor((e.clientY - rect.top) / effectiveScale / pixelSize);
 
         // 在光标画布上绘制笔刷预览框
         drawBrushPreview(x, y);
