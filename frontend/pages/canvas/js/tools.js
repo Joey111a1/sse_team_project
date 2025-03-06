@@ -68,39 +68,7 @@ document.querySelectorAll('.color-palette .color').forEach(color => {
     });
 });
 
-// Handle mouse events
-canvas.addEventListener('mousedown', (e) => {
-	const x = Math.floor(e.offsetX / pixelSize);
-    const y = Math.floor(e.offsetY / pixelSize);
 
-    // 在光标画布上绘制笔刷预览框
-    drawBrushPreview(x, y);
-
-    isDrawing = true; // Start drawing
-    handleDraw(x,y); // Draw the initial pixel
-});
-
-canvas.addEventListener('mousemove', (e) => {
-	const x = Math.floor(e.offsetX / pixelSize);
-    const y = Math.floor(e.offsetY / pixelSize);
-
-    // 在光标画布上绘制笔刷预览框
-    drawBrushPreview(x, y);
-	
-    if (isDrawing) { // Only draw if the mouse is pressed
-        handleDraw(x,y);
-    }
-});
-
-canvas.addEventListener('mouseup', () => {
-    isDrawing = false; // Stop drawing
-	saveState();
-});
-
-canvas.addEventListener('mouseleave', () => {
-    isDrawing = false; // Stop drawing if the mouse leaves the canvas
-	saveState();
-});
 
 // 设置当前工具为选中状态
 function setActiveTool(tool) {
@@ -116,6 +84,8 @@ function setActiveTool(tool) {
 
 // 处理绘制逻辑
 function handleDraw(x, y) {
+    console.log('Handling draw at:', x, y); // 确保函数执行
+    
     if (x < 0 || x >= canvas.width / pixelSize || 
         y < 0 || y >= canvas.height / pixelSize) return;
 

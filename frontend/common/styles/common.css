@@ -23,6 +23,7 @@ body {
     align-items: center;
     height: 100vh; /* 确保 body 占满整个视口高度 */
     overflow: hidden; /* 防止滚动条 */
+    pointer-events: auto; /* 确保鼠标事件可以触发 */
 }
 
 h1 {
