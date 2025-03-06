@@ -138,7 +138,7 @@ canvas {
 }
 
 #grid-canvas, #cursor-canvas {
-    pointer-events: auto; /* 防止网格画布拦截事件 */
+    pointer-events: none; /* 防止网格画布拦截事件 */
 }
 
 .canvas-size-display {
