@@ -13,6 +13,9 @@ const pixelSize = 10; // Each pixel is 10x10 pixels
 
 let showGrid = true; // 控制网格显示
 let savedImageData = null; // For reset
+let isDragging = false;
+let startX, startY;
+let translateX = 0, translateY = 0;
 
 // 初始化画布
 function initCanvas(width, height, artworkId) {
@@ -72,7 +75,8 @@ function updateTransform() {
     cursorCanvas.style.height = `${canvas.height * scale}px`;
 
     // 更新容器的缩放
-    canvasContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    // canvasContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    canvasContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
 }
 
 // 绘制网格
@@ -154,6 +158,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log('Binding mouse events...'); // 确保事件绑定代码执行
     canvas.addEventListener('mousedown', (e) => {
+        if (e.button === 1 || e.ctrlKey) {
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            canvasContainer.style.cursor = 'grabbing'; // Change cursor to indicate dragging
+            e.preventDefault(); // Prevent default behavior (like scrolling)
+            return; // Exit so drawing events aren't processed here.
+        }
         console.log('Mouse down event triggered'); // 确保事件触发
         // const x = Math.floor(e.offsetX / pixelSize);
         // const y = Math.floor(e.offsetY / pixelSize);
@@ -173,33 +185,44 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Mouse down event bound.'); // 确保事件绑定完成
 
     canvas.addEventListener('mousemove', (e) => {
-        console.log('Mouse move event triggered'); // 确保事件触发
-        // const x = Math.floor(e.offsetX / pixelSize);
-        // const y = Math.floor(e.offsetY / pixelSize);
-        const rect = canvas.getBoundingClientRect();
-        const effectiveScale = rect.width / canvas.width;
-        // Adjust mouse coordinates by subtracting the canvas's top-left position
-        // and then dividing by the current scale factor.
-        const x = Math.floor((e.clientX - rect.left) / effectiveScale / pixelSize);
-        const y = Math.floor((e.clientY - rect.top) / effectiveScale / pixelSize);
+        if (isDragging) {
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+        }
+        if (!isDragging) {
+            console.log('Mouse move event triggered'); // 确保事件触发
+            // const x = Math.floor(e.offsetX / pixelSize);
+            // const y = Math.floor(e.offsetY / pixelSize);
+            const rect = canvas.getBoundingClientRect();
+            const effectiveScale = rect.width / canvas.width;
+            // Adjust mouse coordinates by subtracting the canvas's top-left position
+            // and then dividing by the current scale factor.
+            const x = Math.floor((e.clientX - rect.left) / effectiveScale / pixelSize);
+            const y = Math.floor((e.clientY - rect.top) / effectiveScale / pixelSize);
 
-        // 在光标画布上绘制笔刷预览框
-        drawBrushPreview(x, y);
+            // 在光标画布上绘制笔刷预览框
+            drawBrushPreview(x, y);
 
-        if (isDrawing) { // Only draw if the mouse is pressed
-            handleDraw(x, y);
+            if (isDrawing) { // Only draw if the mouse is pressed
+                handleDraw(x, y);
+            }
         }
     });
 
     canvas.addEventListener('mouseup', () => {
         console.log('Mouse up event triggered'); // 确保事件触发
         isDrawing = false; // Stop drawing
+        isDragging = false;
+        canvasContainer.style.cursor = 'grab';
         saveState();
     });
 
     canvas.addEventListener('mouseleave', () => {
         console.log('Mouse leave event triggered'); // 确保事件触发
         isDrawing = false; // Stop drawing if the mouse leaves the canvas
+        isDragging = false;
+        canvasContainer.style.cursor = 'grab';
         saveState();
     });
 });
@@ -226,3 +249,4 @@ document.getElementById('vertical-flip').addEventListener('click', function () {
     flipVertical(canvas, ctx);
 });
 
+canvasContainer.style.cursor = 'grab';
