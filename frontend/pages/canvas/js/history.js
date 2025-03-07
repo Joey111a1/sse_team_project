@@ -6,7 +6,7 @@ if (!userId) {
 }
 
 else {
-    let is_saving = false;
+    window.is_saving = false;
 
     const undoTool = document.getElementById('undo-tool');
     const redoTool = document.getElementById('redo-tool');
@@ -57,7 +57,7 @@ else {
 
         if (history.length > 0) {
             const lastState = history[history.length - 1];
-            if (arraysEqual(lastState.data, currentState.data)) return;
+            if (arraysEqual(lastState.data, currentState.data) && !is_saving) return;
         }
 
         if (history.length >= maxHistorySize) {
