@@ -7,7 +7,7 @@
     text-align: center;
 }
 
-.login-container, .welcome-container {
+.login-container {
     background-color: white;
     padding: 40px;
     border-radius: 8px;

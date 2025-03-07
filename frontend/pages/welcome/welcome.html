@@ -5,16 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
     <link rel="stylesheet" href="../../common/styles/common.css">
-	<link rel="stylesheet" href="../../common/styles/tool_button.css">
-    <link rel="stylesheet" href="../login/login.css">
     <link rel="stylesheet" href="welcome.css">
 </head>
 <body>
+    <header>Pixel Art Editor</header>
     <div class="welcome-container">
-		<header>Pixel Art Editor</header>
-        <h1>Welcome <span id="usernameDisplay"></span>!</h1>
-        <button id="singlePlayer">Single Player</button>
-        <button id="multiPlayer">Multiplayer</button>
+        <!-- 左侧部分 -->
+        <div class="welcome-left">
+            <h1>Welcome!</h1>
+        </div>
+        <!-- 右侧部分 -->
+        <div class="welcome-right">
+            <div class="panel">
+                <!-- 新建项目按钮 -->
+                <button id="newProject" class="new-project-button">New Project</button>
+                <!-- 历史画布列表 -->
+                <div class="history-list"></div>
+            </div>
+        </div>
+    </div>
+    <!-- 模式选择面板 -->
+    <div id="modeSelectionPanel" class="mode-selection-panel">
+        <div class="mode-selection-content">
+            <h2>Select Mode</h2>
+            <button id="soloMode" class="mode-button">Solo</button>
+            <button id="multiplayerMode" class="mode-button">Collaboration</button>
+        </div>
     </div>
     <script src="welcome.js"></script>
 </body>
