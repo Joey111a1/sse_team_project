@@ -9,10 +9,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.database import Base
-from app.models import User
-
-
+from ..app.database import Base
+from ..app.models import User
 
 
 # this is the Alembic Config object, which provides
