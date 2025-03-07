@@ -8,8 +8,7 @@ const previewCanvas = document.getElementById('previewCanvas');
 const sharePosterButton = document.getElementById('sharePosterButton');
 const exportPngButton = document.getElementById('exportPngButton');
 
-shareButton.addEventListener('click', async function () {
-    await saveState();
+shareButton.addEventListener('click', function () {
     overlay.style.display = 'flex';
     drawPreviewCanvas();
 });

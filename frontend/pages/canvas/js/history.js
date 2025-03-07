@@ -11,7 +11,7 @@ else {
 
     let history = [];
     let redoStack = [];
-    const maxHistorySize = 20;
+    const maxHistorySize = 10;
 
     document.getElementById('undo-tool').addEventListener('click', () => {
         if (history.length > 1) {
@@ -60,7 +60,6 @@ else {
         if (history.length >= maxHistorySize) {
             history.shift();
         }
-
         history.push(currentState);
         redoStack = [];
         syncWithBackend(currentState);
@@ -83,7 +82,6 @@ else {
     }
 
     function syncWithBackend(state) {
-        console.log("syncWithBackend function is called with state:", state);
         const imageData = Array.from(state.data);
         fetch('https://pixel-art.azurewebsites.net/api/history/save', {
             method: 'POST',
