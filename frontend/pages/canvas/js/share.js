@@ -1,6 +1,5 @@
 // share.js
 // 获取按钮元素
-const userId = localStorage.getItem('user_id');
 const username = localStorage.getItem('username');
 
 const shareButton = document.getElementById('shareButton');
