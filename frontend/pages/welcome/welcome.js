@@ -119,7 +119,7 @@ function fetchHistoryData() {
             item.addEventListener('click', function () {
                 const historyId = item.getAttribute('data-history-id');
                 console.log('[fetchHistoryData] History item clicked, ID:', historyId);
-                window.location.href = `https://pixel-art.azurewebsites.net/history/${historyId}`; // Redirect to the history artwork detail page (frontend route)
+                window.location.href = `https://pixel-art.azurewebsites.net/api/history/${historyId}`; // Redirect to the history artwork detail page (frontend route)
             });
         });
     })
