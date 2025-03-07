@@ -180,17 +180,42 @@ function exportCanvas(format, angle) {
     const radians = (angle * Math.PI) / 180;
     const width = canvas.width;
     const height = canvas.height;
-    tempCanvas.width = Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
-    tempCanvas.height = Math.abs(height * Math.cos(radians)) + Math.abs(width * Math.sin(radians));
 
-    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-    tempCtx.drawImage(canvas, -width / 2, -height / 2);
+    // Calculate new dimensions for the rotated image
+    const newWidth = Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
+    const newHeight = Math.abs(height * Math.cos(radians)) + Math.abs(width * Math.sin(radians));
 
+    tempCanvas.width = newWidth;
+    tempCanvas.height = newHeight;
+
+    // Translate the context to the center of the new canvas
+    tempCtx.translate(newWidth / 2, newHeight / 2);
+
+    // Apply rotation
+    tempCtx.rotate(radians);
+
+    // Ensure the original canvas has content and draw it on the temporary canvas
+    if (canvas.width && canvas.height) {
+        tempCtx.drawImage(canvas, -width / 2, -height / 2);
+    } else {
+        console.error('Original canvas is empty or not accessible.');
+        return;
+    }
+
+    // Check if the canvas is correctly drawn
+    const imageData = tempCanvas.toDataURL(`image/${format}`);
+    if (!imageData) {
+        console.error('Failed to capture image from canvas.');
+        return;
+    }
+
+    // Create a link to download the image
     const link = document.createElement('a');
     link.download = `pixel-art.${format}`;
-    link.href = tempCanvas.toDataURL(`image/${format}`);
+    link.href = imageData;
     link.click();
 }
+
 
 // 获取关闭按钮
 const closeOverlayButton = document.getElementById('closeOverlayButton');
