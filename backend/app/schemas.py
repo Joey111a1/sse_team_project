@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from typing import List
 from datetime import datetime
 
 class UserCreate(BaseModel):
@@ -24,7 +24,16 @@ class HistorySaveRequest(BaseModel):
 
 class HistoryResponse(BaseModel):
     id: int
+    user_id: int
     imageData: List[int]  # 假设 imageData 是一个整数列表
+    created_at: datetime  # 新增保存时间字段
+
+    class Config:
+        from_attributes = True
+
+class HistorySummaryResponse(BaseModel):
+    id: int
+    created_at: datetime
 
     class Config:
         from_attributes = True

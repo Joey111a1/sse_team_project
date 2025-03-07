@@ -17,8 +17,7 @@ def read_root():
 origins = [
     "http://localhost:8000", 
     "http://127.0.0.1:5500",  # 确保前端的端口号正确
-    "http://localhost:5500"
-    "*",                       # 允许所有来源（调试用）
+    "http://localhost:5500",  
 ]
 
 app.add_middleware(
