@@ -81,7 +81,7 @@ function syncWithBackend(state) {
     const imageData = Array.from(state.data);
     fetch('https://pixel-art.azurewebsites.net/api/history/save', {
         method: 'POST',
-        body: JSON.stringify({ user_id: userId, image_data: imageData }),
+        body: JSON.stringify({ user_id: userId, imageData: imageData }),
         headers: { 'Content-Type': 'application/json' }
     });
 }
