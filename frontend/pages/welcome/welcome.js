@@ -77,7 +77,7 @@ function fetchHistoryData() {
             console.error('[fetchHistoryData] Response not OK. Status:', response.status);
             return response.json().then(err => {
                 console.error('[fetchHistoryData] Error details:', err);
-                throw new Error('Failed to fetch history data');
+                throw new Error(`Failed to fetch history data: ${err.detail || 'Unknown error'}`);
             });
         }
         return response.json();
