@@ -13,14 +13,18 @@ class User(Base):
     password_hash = Column(String, nullable=False)
 
     shares = relationship("Share", back_populates="user", cascade="all, delete")
+    histories = relationship("History", back_populates="user")
 
 class History(Base):
     __tablename__ = "history"
     
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     image_data = Column(Text, nullable=False)  # 存储 JSON 化的像素数据
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)
 
     shares = relationship("Share", back_populates="history")
+    user = relationship("User", back_populates="histories")
 
 class Share(Base):
     __tablename__ = "shares"

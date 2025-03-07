@@ -1,9 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
+from typing import List
 from app.database import get_db
 from app.models import History
 from app.schemas import HistorySaveRequest
 from app.schemas import HistoryResponse
+from app.schemas import HistorySummaryResponse
+from app.auth import get_current_user
 import json
 
 router = APIRouter()
@@ -31,7 +34,9 @@ async def get_history(history_id: int, db: Session = Depends(get_db)):
     
     return {
         "id": history_entry.id,
+        "user_id": history_entry.user_id,  
         "imageData": json.loads(history_entry.image_data),  # 从 JSON 还原数据
+        "created_at": history_entry.created_at
     }
 
 
@@ -42,4 +47,16 @@ async def get_all_histories(db: Session = Depends(get_db)):
     if not history_entries:
         raise HTTPException(status_code=404, detail="No history records found")
     
-    return [{"id": entry.id, "imageData": json.loads(entry.image_data)} for entry in history_entries]
+    return [{
+        "id": entry.id,
+        "imageData": json.loads(entry.image_data),
+        "created_at": entry.created_at
+    } for entry in history_entries]
+
+# ✅ 获取用户历史记录
+@router.get("/history/user", response_model=List[HistorySummaryResponse])
+async def get_user_history(db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    histories = db.query(History).filter(History.user_id == current_user.id).order_by(History.created_at.desc()).all()
+    if not histories:
+        raise HTTPException(status_code=404, detail="No history records found")
+    return histories
