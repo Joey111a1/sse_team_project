@@ -16,13 +16,18 @@ shareButton.addEventListener('click', function () {
 async function drawPreviewCanvas() {
     const previewCtx = previewCanvas.getContext('2d');
 
-    // 设置预览画布为固定大小的正方形
-    const previewSize = 500; // 预览画布的边长
-    const margin = 40; // 边距
-    const innerSize = previewSize - margin * 2; // 内部可用区域大小
+    // 设置预览画布高度为窗口高度的80%，宽度为窗口宽度的50%
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const previewHeight = windowHeight * 0.8; // 高度为窗口高度的80%
+    const previewWidth = windowWidth * 0.5; // 宽度为窗口宽度的50%
 
-    previewCanvas.width = previewSize;
-    previewCanvas.height = previewSize;
+    const margin = 30; // 边距
+    const whiteBarHeight = 80; // 白条的高度
+    const availableHeight = previewHeight - whiteBarHeight; // 可用区域的高度
+
+    previewCanvas.width = previewWidth;
+    previewCanvas.height = previewHeight;
 
     // 填充背景颜色
     const dominantColor = getDominantColor(canvas);
@@ -30,14 +35,17 @@ async function drawPreviewCanvas() {
     previewCtx.fillStyle = `rgba(${lightenedColor.join(',')}, 0.8)`;
     previewCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
 
-    // 计算缩放比例，将原始画布内容缩放到内部可用区域
-    const scale = Math.min(innerSize / canvas.width, innerSize / canvas.height);
+    // 计算缩放比例，确保canvas完整显示在内部可用区域
+    const scale = Math.min(
+        (previewWidth - margin * 2) / canvas.width, // 水平方向可用宽度
+        (availableHeight - margin * 2) / canvas.height // 垂直方向可用高度
+    );
     const scaledWidth = canvas.width * scale;
     const scaledHeight = canvas.height * scale;
 
     // 计算居中位置
-    const offsetX = (previewSize - scaledWidth) / 2;
-    const offsetY = (previewSize - scaledHeight) / 2;
+    const offsetX = (previewWidth - scaledWidth) / 2; // 水平居中
+    const offsetY = (availableHeight - scaledHeight) / 2; // 垂直居中（在白条上方）
 
     // 保存当前 ctx 状态
     previewCtx.save();
@@ -49,21 +57,21 @@ async function drawPreviewCanvas() {
     // 恢复 ctx 状态（取消旋转和移动）
     previewCtx.restore();
 
-    // 添加阴影
+    // 添加阴影（仅对中间画布内容，不对二维码）
     previewCtx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-    previewCtx.shadowBlur = 10;
-    previewCtx.shadowOffsetX = 5;
-    previewCtx.shadowOffsetY = 5;
+    previewCtx.shadowBlur = 8;
+    previewCtx.shadowOffsetX = 4;
+    previewCtx.shadowOffsetY = 4;
 
     // 选择随机字体
     const font = getRandomFont();
-    const fontSizeTitle = 45;
-    const fontSizeUserInfo = 30;
+    const fontSizeTitle = 36;
+    const fontSizeUserInfo = 24;
     const username = 'i';
     const userInfo = `${username} - ${artworkId}`;
 
     try {
-        // **等待字体加载完成**
+        // 等待字体加载完成
         await document.fonts.load(`${fontSizeTitle}px ${font}`);
         await document.fonts.load(`${fontSizeUserInfo}px ${font}`);
 
@@ -73,10 +81,38 @@ async function drawPreviewCanvas() {
 
         previewCtx.font = `${fontSizeUserInfo}px ${font}`;
         const textWidth = previewCtx.measureText(userInfo).width;
-        previewCtx.fillText(userInfo, previewSize - textWidth - margin, previewSize - margin);
+        previewCtx.fillText(userInfo, previewWidth - textWidth - margin, previewHeight - margin);
     } catch (error) {
         console.error("Font failed to load:", font, error);
     }
+
+    // 在下方插入一个白色的长条
+    previewCtx.fillStyle = '#fff';
+    previewCtx.fillRect(0, previewHeight - whiteBarHeight, previewWidth, whiteBarHeight);
+
+    // 在右边放置二维码图片（去除阴影）
+    const qrCode = new Image();
+    qrCode.src = '../../assets/website/webQR.png';
+    qrCode.onload = () => {
+        const qrCodeSize = 60;
+        const qrCodeX = previewWidth - qrCodeSize - margin;
+        const qrCodeY = previewHeight - whiteBarHeight + (whiteBarHeight - qrCodeSize) / 2;
+
+        // 保存当前 ctx 状态
+        previewCtx.save();
+
+        // 去除阴影
+        previewCtx.shadowColor = 'transparent';
+        previewCtx.shadowBlur = 0;
+        previewCtx.shadowOffsetX = 0;
+        previewCtx.shadowOffsetY = 0;
+
+        // 绘制二维码
+        previewCtx.drawImage(qrCode, qrCodeX, qrCodeY, qrCodeSize, qrCodeSize);
+
+        // 恢复 ctx 状态
+        previewCtx.restore();
+    };
 }
 
 const handwritingFonts = [
@@ -121,68 +157,42 @@ function lightenColor(color, percent) {
 }
 
 // Share Current Poster 按钮点击事件
-sharePosterButton.addEventListener('click', async function () {
+sharePosterButton.addEventListener('click', function () {
     try {
-        // 将 Canvas 转换为 Base64 图片数据
-        const imageData = previewCanvas.toDataURL('image/png').split(',')[1]; // 去掉 data:image/png;base64, 前缀
+        // 1. 将 Canvas 转换为 Base64 图片数据（JPG 格式）
+        const imageData = previewCanvas.toDataURL('image/jpeg', 0.9); // 使用 JPG 格式，质量为 90%
 
-        // 构造请求体
-        const requestBody = {
-            history_id: artworkId,
-            user_id: userId,
-            platform: "web", // 替换为实际的平台信息
-            image_data: imageData, // Base64 图片数据
-        };
+        // 2. 创建一个临时链接元素
+        const link = document.createElement('a');
+        link.href = imageData; // 设置链接的 href 为 Base64 数据
+        link.download = 'pixel-art-poster.jpg'; // 设置下载的文件名
 
-        // 发送 POST 请求到后端
-        const response = await fetch('http://127.0.0.1:8000/api/share', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody),
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to upload image');
-        }
-
-        // 获取后端返回的分享链接和图片 URL
-        const result = await response.json();
-        const shareLink = result.share_link; // 分享链接
-        const imageURL = result.image_url;   // 图片 URL
-
-        // 打开新窗口并显示分享页面
-        window.open(`../share/share-poster.html?image=${encodeURIComponent(imageURL)}`);
+        // 3. 触发下载
+        document.body.appendChild(link); // 将链接添加到 DOM 中
+        link.click(); // 模拟点击下载
+        document.body.removeChild(link); // 下载完成后移除链接
 
     } catch (error) {
-        console.error('Failed to generate image:', error);
-        alert('Failed to generate image. Please try again.');
+        console.error('Failed to export image:', error);
+        alert('Failed to export image. Please try again.');
     }
 });
 
 // Export Canvas to PNG 按钮点击事件
 exportPngButton.addEventListener('click', function () {
-    exportCanvas('png', window.rotation)
+    exportCanvasAsPng();
 });
 
-function exportCanvas(format, angle) {
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-
-    const radians = (angle * Math.PI) / 180;
-    const width = canvas.width;
-    const height = canvas.height;
-    tempCanvas.width = Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
-    tempCanvas.height = Math.abs(height * Math.cos(radians)) + Math.abs(width * Math.sin(radians));
-
-    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
-    tempCtx.drawImage(canvas, -width / 2, -height / 2);
-
+function exportCanvasAsPng() {
+    // 1. 创建一个临时链接元素
     const link = document.createElement('a');
-    link.download = `pixel-art.${format}`;
-    link.href = tempCanvas.toDataURL(`image/${format}`);
-    link.click();
+    link.download = 'pixel-art.png'; // 设置下载的文件名
+    link.href = canvas.toDataURL('image/png'); // 将 canvas 导出为 PNG 格式
+
+    // 2. 触发下载
+    document.body.appendChild(link); // 将链接添加到 DOM 中
+    link.click(); // 模拟点击下载
+    document.body.removeChild(link); // 下载完成后移除链接
 }
 
 // 获取关闭按钮

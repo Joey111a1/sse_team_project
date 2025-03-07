@@ -44,6 +44,7 @@ function rotateCanvas(canvas, ctx, degrees) {
 
     newCanvas.width = newWidth;
     newCanvas.height = newHeight;
+    initCanvas(newWidth/pixelSize, newHeight/pixelSize)
 
     // 创建新的像素数据
     const newImageData = newCtx.createImageData(newWidth, newHeight);
@@ -153,26 +154,3 @@ document.getElementById('zoomin-tool').addEventListener('click', () => {
 document.getElementById('zoomout-tool').addEventListener('click', () => {
     zoomCanvas(scale - scaleStep);
 });
-
-// 重置画布
-function resetCanvas() {
-    if (savedImageData) {
-        ctx.putImageData(savedImageData, 0, 0); // 恢复到保存的状态
-    }
-
-    // 重置变换参数
-    translateX = defaultX;
-    translateY = defaultY;
-    rotation = defaultRotation;
-    scale = defaultScale;
-    isFlippedHorizontal = false;
-    isFlippedVertical = false;
-
-    // 更新变换
-    updateTransform();
-
-    console.log("Canvas's transformation has been reseted");
-}
-
-// 绑定重置按钮事件
-document.getElementById('reset-canvas').addEventListener('click', resetCanvas);
