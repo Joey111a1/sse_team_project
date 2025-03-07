@@ -88,12 +88,11 @@ else {
             body: JSON.stringify({ user_id: userId, imageData: imageData }),
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.history_id) {
-                console.log("History saved with ID:", data.history_id);
+        .then(response => {
+            if (response.ok) {
+                console.log("History saved successfully");
             } else {
-                console.error("Failed to save history");
+                console.error("Failed to save history:", response.statusText);
             }
         })
         .catch(error => {
