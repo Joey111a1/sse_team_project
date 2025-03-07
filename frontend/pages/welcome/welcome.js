@@ -127,7 +127,7 @@ function fetchHistoryData() {
         console.error('[fetchHistoryData] Error fetching history data:', error);
         // Optionally, display an error message to the user
         const errorMessage = document.createElement('div');
-        errorMessage.textContent = 'An error occurred while fetching your history. Please try again later.';
+        errorMessage.textContent = 'Currently you have no existing artwork.';
         errorMessage.style.color = 'red';
         const historyList = document.querySelector('.history-list');
         if (historyList) {
