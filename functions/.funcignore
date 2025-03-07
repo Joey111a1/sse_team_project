@@ -1,0 +1,24 @@
+# Exclude local settings (do not deploy secrets or local configurations)
+local.settings.json
+
+# Exclude virtual environment directories
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache files and compiled artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude environment variable files (if you manage them separately)
+.env
+
+# Exclude log files
+*.log
+
+# Exclude editor settings and other local configurations
+.vscode/
+.idea/
