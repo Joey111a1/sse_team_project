@@ -47,29 +47,46 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // 获取历史画布数据
-function fetchHistoryData(username) {
-    // 模拟从后端获取数据
-    const apiUrl = `https://pixel-art.azurewebsites.net/api/history?username=${username}`;
+function fetchHistoryData() {
+    const apiUrl = 'https://pixel-art.azurewebsites.net/api/history/user'; // Backend API endpoint to fetch user history
 
-    fetch(apiUrl)
-        .then(response => response.json())
+    // Ensure the user is authenticated before making the request
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+        window.location.href = '../login/login.html'; // Redirect to login if the user is not authenticated
+        return;
+    }
+
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Using JWT token for authorization
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch history data');
+            }
+            return response.json();
+        })
         .then(data => {
-            // 动态生成历史画布项目
+            // Dynamically generate the history artwork list
             const historyList = document.querySelector('.history-list');
-            historyList.innerHTML = ''; // 清空现有内容
+            historyList.innerHTML = ''; // Clear existing content
 
             data.forEach(item => {
                 const historyItem = document.createElement('div');
                 historyItem.classList.add('history-item');
-                historyItem.setAttribute('data-url', item.url);
+                historyItem.setAttribute('data-history-id', item.id); // Store history artwork ID
 
                 const artworkId = document.createElement('span');
                 artworkId.classList.add('artwork-id');
-                artworkId.textContent = item.artworkId;
+                artworkId.textContent = `Artwork ${item.id}`;
 
                 const modifiedTime = document.createElement('span');
                 modifiedTime.classList.add('modified-time');
-                modifiedTime.textContent = item.modifiedTime;
+                modifiedTime.textContent = new Date(item.created_at).toLocaleString(); // Format date
 
                 historyItem.appendChild(artworkId);
                 historyItem.appendChild(modifiedTime);
@@ -77,16 +94,21 @@ function fetchHistoryData(username) {
                 historyList.appendChild(historyItem);
             });
 
-            // 为历史画布项添加点击事件
+            // Add click event listener to each history item
             const historyItems = document.querySelectorAll('.history-item');
             historyItems.forEach(item => {
                 item.addEventListener('click', function () {
-                    const url = item.getAttribute('data-url');
-                    window.location.href = url; // 跳转到对应的画布页面
+                    const historyId = item.getAttribute('data-history-id');
+                    window.location.href = `https://pixel-art.azurewebsites.net/history/${historyId}`; // Redirect to the history artwork detail page (frontend route)
                 });
             });
         })
         .catch(error => {
             console.error('Error fetching history data:', error);
+            // Optionally, display an error message to the user
+            const errorMessage = document.createElement('div');
+            errorMessage.textContent = 'An error occurred while fetching your history. Please try again later.';
+            errorMessage.style.color = 'red';
+            document.querySelector('.history-list').appendChild(errorMessage);
         });
 }
