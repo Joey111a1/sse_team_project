@@ -58,7 +58,7 @@ document.getElementById('color-picker').addEventListener('input', (e) => {
 
 // Clear canvas event listener
 document.getElementById('clear-canvas').addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    initCanvas(canvas.width/pixelSize,canvas.height/pixelSize);
 });
 
 document.querySelectorAll('.color-palette .color').forEach(color => {
