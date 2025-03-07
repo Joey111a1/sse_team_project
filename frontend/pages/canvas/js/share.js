@@ -76,6 +76,14 @@ async function drawPreviewCanvas() {
     } catch (error) {
         console.error("Font failed to load:", font, error);
     }
+
+    // add qrcode to the bottom-left corner
+    const qrCode = new Image();
+    qrCode.src = '../../assets/website/webQR.png';
+    qrCode.onload = () => {
+        const qrSize = 80; // modify qrcode size
+        previewCtx.drawImage(qrCode, margin, previewCanvas.height - qrSize - margin, qrSize, qrSize);
+    };
 }
 
 const handwritingFonts = [
