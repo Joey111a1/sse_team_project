@@ -1,6 +1,10 @@
 // history.js
 // for redo, undo
 const userId = localStorage.getItem('user_id');
+if (!userId) {
+    console.error("User ID is not available in localStorage");
+    return; // Prevent sending the request if no user_id
+}
 
 const undoTool = document.getElementById('undo-tool');
 const redoTool = document.getElementById('redo-tool');
@@ -83,5 +87,16 @@ function syncWithBackend(state) {
         method: 'POST',
         body: JSON.stringify({ user_id: userId, imageData: imageData }),
         headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.history_id) {
+            console.log("History saved with ID:", data.history_id);
+        } else {
+            console.error("Failed to save history");
+        }
+    })
+    .catch(error => {
+        console.error("Error while saving history:", error);
     });
 }
