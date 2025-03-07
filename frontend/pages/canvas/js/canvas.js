@@ -32,7 +32,6 @@ function initCanvas(width, height) {
     canvasHeightDisplay.textContent = height;
 
     // 保存状态并初始化画布位置
-    saveState();
     updateTransform();
     drawGrid();
 
