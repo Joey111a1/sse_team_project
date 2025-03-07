@@ -81,7 +81,7 @@ async function drawPreviewCanvas() {
     const qrCode = new Image();
     qrCode.src = '../../assets/website/webQR.png';
     qrCode.onload = () => {
-        const qrSize = 80; // modify qrcode size
+        const qrSize = 100; // modify qrcode size
         previewCtx.drawImage(qrCode, margin, previewCanvas.height - qrSize - margin, qrSize, qrSize);
     };
 }
