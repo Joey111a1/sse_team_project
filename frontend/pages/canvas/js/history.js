@@ -60,10 +60,11 @@ else {
 
         if (history.length >= maxHistorySize) {
             history.shift();
-            syncWithBackend(currentState);
         }
+
         history.push(currentState);
         redoStack = [];
+        syncWithBackend(currentState);
         saveCanvasState();  // 保存画布状态
     }
 
