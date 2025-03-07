@@ -88,6 +88,7 @@ else {
     }
 
     function syncWithBackend(state) {
+        console.log("syncWithBackend function is called");
         const imageData = Array.from(state.data);
         fetch('https://pixel-art.azurewebsites.net/api/history/save', {
             method: 'POST',
