@@ -6,6 +6,8 @@ if (!userId) {
 }
 
 else {
+    let is_saving = false;
+
     const undoTool = document.getElementById('undo-tool');
     const redoTool = document.getElementById('redo-tool');
 
@@ -64,7 +66,9 @@ else {
 
         history.push(currentState);
         redoStack = [];
-        syncWithBackend(currentState);
+        if (is_saving === true) {
+            syncWithBackend(currentState);
+        }
         saveCanvasState();  // 保存画布状态
     }
 
