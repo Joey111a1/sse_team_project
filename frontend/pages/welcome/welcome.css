@@ -1,0 +1,155 @@
+/* Global styles (currently commented out)*/
+/*body {
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    display: flex;
+    height: 100vh; 
+    background-color: #f4f4f4; 
+}*/
+
+/* Container styles for the welcome page */
+.welcome-container {
+    display: flex;        /* Uses flex layout for child elements */
+    width: 100%;          /* Container spans full width */
+    height: 100%;         /* Container spans full height */
+}
+
+/* Left side styles of the welcome page */
+.welcome-left {
+    width: 33.33%;         /* Left part occupies one-third of the width */
+    display: flex;         /* Use flex layout */
+    flex-direction: column;/* Arrange children in a column */
+    align-items: center;   /* Center items horizontally */
+    justify-content: center;/* Center items vertically */
+    padding: 20px;         /* Adds padding around content */
+}
+
+.welcome-left h1 {
+    font-size: 30px;  /* Sets font size for the heading */
+    color: #333;      /* Sets heading color to dark grey */
+}
+
+/* Right side styles of the welcome page */
+.welcome-right {
+    width: 66.66%;           /* Right part occupies two-thirds of the width */
+    display: flex;           /* Use flex layout */
+    align-items: center;     /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    /* background-color: #f8f8f8; */  /* Optional background color, currently commented out */
+    height: 100vh;           /* Ensures the right part fills the viewport height */
+}
+
+/* Panel styling for elements within the welcome page */
+.panel {
+    width: 90%;                /* Panel occupies 90% of available width */
+    max-height: 70vh;          /* Maximum height is 70% of the viewport height */
+    background-color: #fff;    /* White background */
+    padding: 20px;             /* Padding inside the panel */
+    border-radius: 8px;        /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    overflow-y: auto;          /* Vertical scrollbar if content exceeds height */
+    display: flex;             /* Use flex layout */
+    flex-direction: column;    /* Arrange children vertically */
+    gap: 20px;                 /* Gap between child elements */
+}
+
+/* Styles for the "New Project" button */
+.new-project-button {
+    align-self: flex-start;    /* Aligns the button to the left within its container */
+    padding: 10px 20px;        /* Vertical and horizontal padding */
+    background-color: #28a745; /* Green background */
+    color: #fff;               /* White text */
+    border: none;              /* No border */
+    border-radius: 4px;        /* Slightly rounded corners */
+    cursor: pointer;           /* Pointer cursor on hover */
+    font-size: 16px;           /* Font size for the button text */
+    text-align: center;        /* Center the text */
+}
+
+/* Hover effect for the "New Project" button */
+.new-project-button:hover {
+    background-color: #218838; /* Darker green when hovered */
+}
+
+/* Styles for the history list container */
+.history-list {
+    width: 100%;               /* List takes full available width */
+    display: flex;             /* Use flex layout */
+    flex-direction: column;    /* Arrange list items vertically */
+    gap: 10px;                 /* Spacing between list items */
+}
+
+/* Styles for each history item in the list */
+.history-item {
+    display: flex;             /* Use flex layout */
+    justify-content: space-between; /* Space between artwork id and modified time */
+    padding: 10px;             /* Padding around each item */
+    border-bottom: 1px solid #ddd; /* Bottom border for separation */
+    cursor: pointer;           /* Pointer cursor to indicate interactivity */
+    transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+}
+
+/* Hover effect for history items */
+.history-item:hover {
+    background-color: #f0f0f0; /* Light grey background when hovered */
+}
+
+/* Style for the artwork ID text within a history item */
+.history-item .artwork-id {
+    font-weight: bold; /* Bold text for emphasis */
+    color: #333;       /* Dark grey text color */
+}
+
+/* Style for the modified time text within a history item */
+.history-item .modified-time {
+    color: #666;       /* Medium grey color for the modified time */
+}
+
+/* Styles for the mode selection panel (for choosing drawing modes) */
+.mode-selection-panel {
+    display: none;                  /* Hidden by default */
+    position: fixed;                /* Fixed positioning over the entire screen */
+    top: 0;                         /* Start at the top */
+    left: 0;                        /* Start at the left */
+    width: 100%;                    /* Full width */
+    height: 100%;                   /* Full height */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    justify-content: center;        /* Center child elements horizontally */
+    align-items: center;            /* Center child elements vertically */
+    z-index: 1000;                  /* Ensure the panel appears above all other elements */
+}
+
+/* Styles for the content area within the mode selection panel */
+.mode-selection-content {
+    background-color: #fff;         /* White background */
+    padding: 20px;                  /* Padding inside the panel */
+    border-radius: 8px;             /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    text-align: center;             /* Center text within the panel */
+}
+
+/* Heading style for the mode selection content */
+.mode-selection-content h2 {
+    margin-bottom: 20px;            /* Space below the heading */
+    color: #333;                    /* Dark grey text color */
+}
+
+/* Styles for mode selection buttons */
+.mode-button {
+    width: 150px;                   /* Fixed button width */
+    padding: 10px;                  /* Padding inside the button */
+    margin: 10px;                   /* Margin around the button */
+    background-color: #28a745;      /* Green background */
+    color: #fff;                    /* White text */
+    border: none;                   /* No border */
+    border-radius: 4px;             /* Rounded corners */
+    cursor: pointer;                /* Pointer cursor on hover */
+    font-size: 16px;                /* Font size for the button text */
+    text-align: center;             /* Center text */
+}
+
+/* Hover effect for mode selection buttons */
+.mode-button:hover {
+    background-color: #218838;      /* Darker green when hovered */
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Poster</title>
+    <!-- Link to common styles -->
+    <link rel="stylesheet" href="../../common/styles/common.css">
+    <style>
+        /* Style for images to ensure responsiveness and visual appeal */
+        img {
+            max-width: 100%; /* Image scales to fit the container width */
+            height: auto;    /* Maintain aspect ratio */
+            border: 1px solid #ddd; /* Light border around the image */
+            border-radius: 10px;    /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        /* Styled button for navigation */
+        .styled-button {
+            display: inline-block;
+            width: 300px;
+            padding: 10px;
+            background-color: #28a745; /* Green background */
+            color: #fff;               /* White text */
+            text-decoration: none;     /* Remove underline from link */
+            border-radius: 4px;        /* Rounded corners */
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        /* Hover effect for the styled button */
+        .styled-button:hover {
+            background-color: #e0e0e0; /* Change background on hover */
+            color: black;            /* Change text color on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed header displaying the application title -->
+    <header>Pixel Art Editor</header>
+    <!-- Content container where the poster image and button will be inserted -->
+    <div id="content"></div>
+
+    <script>
+        // Retrieve the 'image' query parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageURL = urlParams.get('image');
+
+        if (imageURL) {
+            // If an image URL is present, display the image and a navigation button
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = `
+                <img src="${imageURL}" alt="Pixel Art Poster">
+                <br>
+                <a href="../login/login.html" class="button">
+                    Go to Pixel Art Editor
+                </a>
+            `;
+        } else {
+            // If no image URL is found, log an error and display an error message
+            console.error("No image URL found in the query parameters.");
+            document.getElementById('content').innerHTML = "<p>Error: No image URL found.</p>";
+        }
+    </script>
+</body>
+</html>

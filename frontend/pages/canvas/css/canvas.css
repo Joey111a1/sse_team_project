@@ -1,0 +1,194 @@
+/* Container for the main layout, occupying full viewport */
+.container {
+    width: 100%;                         /* Full width */
+    height: 100vh;                       /* Full viewport height */
+    display: flex;                       /* Use flexbox layout */
+    flex-direction: column;              /* Arrange children vertically */
+    justify-content: center;             /* Center children vertically */
+    align-items: center;                 /* Center children horizontally */
+    padding: 20px;                       /* Internal spacing */
+    box-sizing: border-box;              /* Include padding/border in element's width/height */
+    overflow: hidden;                    /* Hide overflow content */
+    position: relative;                  /* For positioning child elements */
+}
+
+/* Brush Panel styling, fixed near the top-center */
+.brush-panel {
+    position: fixed;
+    top: 70px;                           /* 70px from the top (header height + 20px) */
+    left: 50%;                           /* Center horizontally */
+    transform: translateX(-50%);         /* Adjust horizontal centering */
+    background-color: #f1f1f1;             /* Light grey background */
+    padding: 10px 20px;                  /* Vertical and horizontal padding */
+    border-radius: 5px;                  /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);/* Soft shadow for depth */
+    display: flex;                       /* Use flex layout */
+    z-index: 999;                        /* Ensure it stays above other elements */
+}
+
+/* Bold spacing for text inside the brush panel */
+.brush-panel span {
+    margin-right: 10px;                  /* Space to the right */
+    font-weight: bold;                   /* Bold text */
+}
+
+/* Left and Right Panels styling */
+.left-panel,
+.right-panel {
+    width: 75px;                         /* Fixed width */
+    display: flex;
+    flex-direction: column;              /* Arrange buttons vertically */
+    align-items: center;                 /* Center items horizontally */
+    gap: 10px;                           /* Space between buttons */
+    background-color: #c5c5c5;             /* Grey background */
+    border-radius: 5px;                  /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);/* Soft shadow */
+    padding: 15px;                       /* Internal padding */
+    position: fixed;                     /* Fixed positioning */
+    top: 50%;                           /* Center vertically */
+    transform: translateY(-50%);         /* Adjust vertical centering */
+    z-index: 100;                        /* Ensure they are above most elements */
+}
+
+.left-panel {
+    left: 20px;                          /* 20px from the left edge */
+}
+
+.right-panel {
+    right: 20px;                         /* 20px from the right edge */
+}
+
+/* Styling for text in left panel */
+.left-panel p {
+    margin: 0;                           /* Remove default margin */
+    font-size: 18px;                     /* Set font size */
+}
+
+/* Bottom Panel styling, fixed at the bottom center */
+.bottom-panel {
+    display: flex;
+    justify-content: center;             /* Center horizontally */
+    align-items: center;                 /* Center vertically */
+    gap: 10px;                           /* Space between buttons */
+    background-color: #c5c5c5;             /* Grey background */
+    border-radius: 5px;                  /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);/* Soft shadow */
+    padding: 15px;                       /* Internal spacing */
+    position: fixed;
+    bottom: 20px;                        /* 20px from bottom */
+    left: 50%;                           /* Center horizontally */
+    transform: translateX(-50%);         /* Adjust centering */
+    z-index: 1000;                       /* Highest z-index for visibility */
+}
+
+/* Basic button styling */
+button {
+    padding: 10px 20px;                  /* Button padding */
+    border: 1px solid #ccc;              /* Light grey border */
+    border-radius: 5px;                  /* Rounded corners */
+    background-color: #f9f9f9;             /* Default background */
+    cursor: pointer;                     /* Pointer cursor */
+    font-size: 16px;                     /* Font size */
+}
+
+/* Styling for an active button */
+button.active {
+    background-color: #28a745;           /* Green background when active */
+    color: #fff;                         /* White text */
+}
+
+/* Hover effect for buttons */
+button:hover {
+    background-color: #e0e0e0;           /* Lighter grey background on hover */
+}
+
+/* Style for color input fields */
+input[type="color"] {
+    padding: 0;
+    border: none;
+    background: none;
+    width: 40px;                         /* Fixed width */
+    height: 40px;                        /* Fixed height */
+    cursor: pointer;
+}
+
+/* Ensure canvas is on top and positioned relative for transformations */
+canvas {
+    z-index: 9999;                      /* Highest z-index for canvas */
+    position: relative;                  /* Position relative for z-index to work */
+}
+
+/* All layered canvases */
+#pixel-canvas,
+#grid-canvas,
+#cursor-canvas {
+    position: absolute;                 /* Absolute positioning */
+    top: 0;
+    left: 0;
+    transform-origin: center center;     /* Center as the origin for transforms */
+}
+
+/* Enable pointer events on the pixel canvas */
+#pixel-canvas {
+    pointer-events: auto;
+}
+
+/* Disable pointer events on grid and cursor canvases to avoid interference */
+#grid-canvas, #cursor-canvas {
+    pointer-events: none;
+}
+
+/* Display for canvas size, fixed in the bottom left corner */
+.canvas-size-display {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    font-size: 14px;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);   /* Small shadow */
+    z-index: 999;
+}
+
+/* Share button container, fixed at the top right corner */
+.share-button-container {
+    position: fixed;
+    top: 70px;                          /* 70px from the top */
+    right: 20px;                        /* 20px from the right */
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;                /* Align buttons horizontally */
+    gap: 10px;                          /* Spacing between buttons */
+    align-items: center;
+}
+
+/* Multiplayer panel container, fixed at the top left corner, hidden by default */
+.multiplayer-panel {
+    position: fixed;
+    top: 70px;                          /* 70px from the top */
+    left: 20px;                         /* 20px from the left */
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;                /* Align buttons horizontally */
+    gap: 10px;                          /* Spacing between buttons */
+    align-items: center;
+    display: none;                      /* Hidden by default */
+}
+
+/* If gap does not work, use margin to separate buttons in multiplayer panel */
+.multiplayer-panel .tool-button {
+    margin-right: 10px;
+}
+
+.multiplayer-panel .tool-button:last-child {
+    margin-right: 0;                    /* No margin on the last button */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .left-panel, .right-panel {
+        width: 120px;                 /* Reduce width on small screens */
+    }
+}
