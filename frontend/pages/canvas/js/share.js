@@ -170,50 +170,19 @@ sharePosterButton.addEventListener('click', async function () {
 
 // Export Canvas to PNG 按钮点击事件
 exportPngButton.addEventListener('click', function () {
-    exportCanvas('png', window.rotation)
+    exportCanvasAsPng();
 });
 
-function exportCanvas(format, angle) {
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-
-    const radians = (angle * Math.PI) / 180;
-    const width = canvas.width;
-    const height = canvas.height;
-
-    // Calculate new dimensions for the rotated image
-    const newWidth = Math.abs(width * Math.cos(radians)) + Math.abs(height * Math.sin(radians));
-    const newHeight = Math.abs(height * Math.cos(radians)) + Math.abs(width * Math.sin(radians));
-
-    tempCanvas.width = newWidth;
-    tempCanvas.height = newHeight;
-
-    // Translate the context to the center of the new canvas
-    tempCtx.translate(newWidth / 2, newHeight / 2);
-
-    // Apply rotation
-    tempCtx.rotate(radians);
-
-    // Ensure the original canvas has content and draw it on the temporary canvas
-    if (canvas.width && canvas.height) {
-        tempCtx.drawImage(canvas, -width / 2, -height / 2);
-    } else {
-        console.error('Original canvas is empty or not accessible.');
-        return;
-    }
-
-    // Check if the canvas is correctly drawn
-    const imageData = tempCanvas.toDataURL(`image/${format}`);
-    if (!imageData) {
-        console.error('Failed to capture image from canvas.');
-        return;
-    }
-
-    // Create a link to download the image
+function exportCanvasAsPng() {
+    // 1. 创建一个临时链接元素
     const link = document.createElement('a');
-    link.download = `pixel-art.${format}`;
-    link.href = imageData;
-    link.click();
+    link.download = 'pixel-art.png'; // 设置下载的文件名
+    link.href = canvas.toDataURL('image/png'); // 将 canvas 导出为 PNG 格式
+
+    // 2. 触发下载
+    document.body.appendChild(link); // 将链接添加到 DOM 中
+    link.click(); // 模拟点击下载
+    document.body.removeChild(link); // 下载完成后移除链接
 }
 
 
