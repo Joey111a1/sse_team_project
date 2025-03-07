@@ -15,7 +15,7 @@ let showGrid = true; // 控制网格显示
 let savedImageData = null; // For reset
 
 // 初始化画布
-function initCanvas(width, height, artworkId) {
+function initCanvas(width, height) {
     const canvasWidth = width * pixelSize;
     const canvasHeight = height * pixelSize;
 
