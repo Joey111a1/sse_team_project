@@ -1,5 +1,7 @@
 // history.js
 // for redo, undo
+const userId = localStorage.getItem('user_id');
+
 const undoTool = document.getElementById('undo-tool');
 const redoTool = document.getElementById('redo-tool');
 
@@ -79,7 +81,7 @@ function syncWithBackend(state) {
     const imageData = Array.from(state.data);
     fetch('https://pixel-art.azurewebsites.net/api/history/save', {
         method: 'POST',
-        body: JSON.stringify({ imageData }),
+        body: JSON.stringify({ user_id: userId, image_data: imageData }),
         headers: { 'Content-Type': 'application/json' }
     });
 }
