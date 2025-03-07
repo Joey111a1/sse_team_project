@@ -50,13 +50,19 @@ document.addEventListener('DOMContentLoaded', function () {
 function fetchHistoryData() {
     const apiUrl = 'https://pixel-art.azurewebsites.net/api/history/user'; // Backend API endpoint to fetch user history
 
+    console.log('[fetchHistoryData] Starting function execution');
+    
     // Ensure the user is authenticated before making the request
     const token = localStorage.getItem('access_token');
-    console.log('Token:', token);
+    console.log('[fetchHistoryData] Retrieved token:', token);
+    
     if (!token) {
+        console.error('[fetchHistoryData] No token found. Redirecting to login.');
         window.location.href = '../login/login.html'; // Redirect to login if the user is not authenticated
         return;
     }
+
+    console.log('[fetchHistoryData] Token exists, making fetch request to:', apiUrl);
 
     fetch(apiUrl, {
         method: 'GET',
@@ -66,17 +72,25 @@ function fetchHistoryData() {
         }
     })
     .then(response => {
+        console.log('[fetchHistoryData] Received response:', response);
         if (!response.ok) {
+            console.error('[fetchHistoryData] Response not OK. Status:', response.status);
             throw new Error('Failed to fetch history data');
         }
         return response.json();
     })
     .then(data => {
+        console.log('[fetchHistoryData] Data received:', data);
         // Dynamically generate the history artwork list
         const historyList = document.querySelector('.history-list');
+        if (!historyList) {
+            console.error('[fetchHistoryData] Could not find element with class "history-list"');
+            return;
+        }
         historyList.innerHTML = ''; // Clear existing content
 
         data.forEach(item => {
+            console.log('[fetchHistoryData] Processing item:', item);
             const historyItem = document.createElement('div');
             historyItem.classList.add('history-item');
             historyItem.setAttribute('data-history-id', item.id); // Store history artwork ID
@@ -97,19 +111,27 @@ function fetchHistoryData() {
 
         // Add click event listener to each history item
         const historyItems = document.querySelectorAll('.history-item');
+        console.log('[fetchHistoryData] Adding click event listeners to history items:', historyItems.length);
         historyItems.forEach(item => {
             item.addEventListener('click', function () {
                 const historyId = item.getAttribute('data-history-id');
+                console.log('[fetchHistoryData] History item clicked, ID:', historyId);
                 window.location.href = `https://pixel-art.azurewebsites.net/history/${historyId}`; // Redirect to the history artwork detail page (frontend route)
             });
         });
     })
     .catch(error => {
-        console.error('Error fetching history data:', error);
+        console.error('[fetchHistoryData] Error fetching history data:', error);
         // Optionally, display an error message to the user
         const errorMessage = document.createElement('div');
         errorMessage.textContent = 'An error occurred while fetching your history. Please try again later.';
         errorMessage.style.color = 'red';
-        document.querySelector('.history-list').appendChild(errorMessage);
+        const historyList = document.querySelector('.history-list');
+        if (historyList) {
+            historyList.appendChild(errorMessage);
+        } else {
+            console.error('[fetchHistoryData] Could not find element with class "history-list" to display error message.');
+        }
     });
 }
+
