@@ -106,7 +106,4 @@ nyc_output/
 *.swp
 *.swo
 
-# =========================================
-# Pytest Cache
-# =========================================
-.pytest_cache/
+local.settings.json
