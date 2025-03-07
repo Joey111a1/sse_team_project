@@ -106,8 +106,15 @@ function fetchHistoryData() {
             modifiedTime.classList.add('modified-time');
             modifiedTime.textContent = new Date(item.created_at).toLocaleString(); // Format date
 
+            // Add image element if imageData exists
+            const imgElement = document.createElement('img');
+            if (item.imageData) {
+                imgElement.src = item.imageData; // Assuming imageData is a Base64 string or data URL
+            }
+
             historyItem.appendChild(artworkId);
             historyItem.appendChild(modifiedTime);
+            historyItem.appendChild(imgElement);
 
             historyList.appendChild(historyItem);
         });
@@ -137,4 +144,3 @@ function fetchHistoryData() {
         }
     });
 }
-
