@@ -45,6 +45,7 @@ else {
     });
 
     function saveState() {
+        console.log("saveState function is called");
         const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
         if (!currentState) {
@@ -82,6 +83,7 @@ else {
     }
 
     function syncWithBackend(state) {
+        console.log("syncWithBackend function is called with state:", state);
         const imageData = Array.from(state.data);
         fetch('https://pixel-art.azurewebsites.net/api/history/save', {
             method: 'POST',
