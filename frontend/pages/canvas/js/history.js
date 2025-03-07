@@ -45,7 +45,6 @@ else {
     });
 
     function saveState() {
-        console.log("saveState function is called");
         const currentState = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
         if (!currentState) {
@@ -60,10 +59,11 @@ else {
 
         if (history.length >= maxHistorySize) {
             history.shift();
-            syncWithBackend(currentState);
         }
+
         history.push(currentState);
         redoStack = [];
+        syncWithBackend(currentState);
         saveCanvasState(currentState);  // 保存画布状态
     }
 
@@ -90,15 +90,5 @@ else {
             body: JSON.stringify({ user_id: userId, imageData: imageData }),
             headers: { 'Content-Type': 'application/json' }
         })
-        .then(response => {
-            if (response.ok) {
-                console.log("History saved successfully");
-            } else {
-                console.error("Failed to save history:", response.statusText);
-            }
-        })
-        .catch(error => {
-            console.error("Error while saving history:", error);
-        });
     }
 }
