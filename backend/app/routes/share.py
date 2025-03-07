@@ -9,11 +9,16 @@ from pathlib import Path
 
 router = APIRouter()
 
+# Create the static directory for saving images if it does not exist
 STATIC_DIR = Path("static/images")
 STATIC_DIR.mkdir(parents=True, exist_ok=True)
 
 def save_image(image_data: str) -> str:
-    """ 将 Base64 图片数据转换成 PNG 并存储 """
+    """Convert Base64 encoded image data to a PNG file and store it.
+    
+    Returns:
+        A URL pointing to the saved image.
+    """
     try:
         image_bytes = base64.b64decode(image_data)
         image_id = str(uuid.uuid4())[:8]
@@ -28,7 +33,15 @@ def save_image(image_data: str) -> str:
 
 @router.post("/share", response_model=ShareResponse)
 async def create_share(share_data: ShareCreateRequest, db: Session = Depends(get_db)):
-    """ 处理分享请求 """
+    """Handle share requests.
+
+    This endpoint:
+      - Validates the existence of the referenced history record.
+      - Validates the existence of the referenced user.
+      - Saves the provided Base64 image data as a PNG file.
+      - Generates a unique share link.
+      - Creates a new share record in the database and returns its details.
+    """
     history = db.query(History).filter(History.id == share_data.history_id).first()
     if not history:
         raise HTTPException(status_code=404, detail="History record not found")
@@ -37,7 +50,7 @@ async def create_share(share_data: ShareCreateRequest, db: Session = Depends(get
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    image_url = save_image(share_data.image_data)  # 存储图片
+    image_url = save_image(share_data.image_data)  # Save the image and retrieve its URL
     share_id = str(uuid.uuid4())[:8]
     share_link = f"http://127.0.0.1:8000/api/share/{share_id}"
 

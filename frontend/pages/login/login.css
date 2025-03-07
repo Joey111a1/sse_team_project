@@ -1,110 +1,126 @@
+/* Container styling for general use */
 .container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
+    background-color: #fff;               /* White background */
+    padding: 20px;                        /* 20px padding around the container */
+    border-radius: 8px;                   /* Rounded corners with 8px radius */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);/* Subtle box shadow for depth */
+    width: 300px;                         /* Fixed width of 300px */
+    text-align: center;                   /* Center text horizontally */
 }
 
+/* Specific styling for the login container */
 .login-container {
-    background-color: white;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    background-color: white;              /* White background */
+    padding: 40px;                        /* 40px padding for extra space */
+    border-radius: 8px;                   /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);/* Soft shadow effect */
+    text-align: center;                   /* Center align text */
 }
 
+/* Utility class to hide elements */
 .hidden {
-    display: none;
+    display: none;                        /* Hide the element */
 }
 
+/* Styling for text and password input fields */
 input[type="text"],
 input[type="password"] {
-    padding: 10px;
-    /* margin-top: 10px; */
-    margin-bottom: 10px; /* 统一设置下边距 */
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-    box-sizing: border-box; /* 确保宽度包含 padding 和 border */
+    padding: 10px;                        /* Padding inside the input */
+    /* margin-top: 10px; */               /* Commented out top margin */
+    margin-bottom: 10px;                  /* Bottom margin for spacing */
+    font-size: 16px;                      /* Font size set to 16px */
+    border: 1px solid #ccc;               /* Light grey border */
+    border-radius: 4px;                   /* Slightly rounded corners */
+    width: 100%;                          /* Input takes full width of container */
+    box-sizing: border-box;               /* Include padding and border in width calculation */
 }
 
+/* Basic button styling */
 button {
-    width: 300px;
-    padding: 10px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px; /* 设置字体大小 */
-    margin-bottom: 10px; /* 按钮之间的间距 */
+    width: 300px;                         /* Fixed button width */
+    padding: 10px;                        /* Padding inside the button */
+    background-color: #28a745;            /* Green background color */
+    color: #fff;                          /* White text color */
+    border: none;                         /* No border */
+    border-radius: 4px;                   /* Rounded corners */
+    cursor: pointer;                      /* Pointer cursor on hover */
+    font-size: 16px;                      /* Font size of button text */
+    margin-bottom: 10px;                  /* Space below buttons */
 }
 
+/* Hover effect for buttons */
 button:hover {
-    background-color: #e0e0e0;
+    background-color: #e0e0e0;            /* Lighter background on hover */
 }
 
+/* Styling for the section that toggles additional content */
 .toggle-section {
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: 10px;                     /* Margin at the top for spacing */
+    font-size: 14px;                      /* Smaller font size */
 }
 
+/* Link styling within toggle sections */
 .toggle-section a {
-    color: #007bff;
-    text-decoration: none;
+    color: #007bff;                       /* Blue text color for links */
+    text-decoration: none;                /* No underline by default */
 }
 
+/* Hover effect for links in toggle sections */
 .toggle-section a:hover {
-    text-decoration: underline;
+    text-decoration: underline;           /* Underline on hover */
 }
 
+/* Container for password input and toggle icon */
 .password-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    /* margin-top: 10px; */
+    position: relative;                   /* Allows absolute positioning of the toggle button */
+    display: flex;                        /* Use flex layout for alignment */
+    align-items: center;                  /* Vertically center items */
+    /* margin-top: 10px; */               /* Commented out top margin */
 }
 
+/* Extra padding on the right of the password field to accommodate the toggle button */
 #login-password {
-    padding-right: 40px; /* 为按钮留出空间 */
+    padding-right: 40px;
 }
 
+/* Styling for the password visibility toggle button */
 .toggle-password {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    width: 24px; /* 图标宽度 */
-    height: 24px; /* 图标高度 */
+    position: absolute;                   /* Positioned absolutely within the container */
+    right: 0;                             /* Align to the right edge */
+    top: 50%;                             /* Vertically center relative to the container */
+    transform: translateY(-50%);          /* Adjust for perfect vertical centering */
+    background: none;                     /* No background */
+    border: none;                         /* No border */
+    cursor: pointer;                      /* Pointer cursor on hover */
+    padding: 0;                           /* No padding */
+    width: 24px;                          /* Fixed width for the icon */
+    height: 24px;                         /* Fixed height for the icon */
 }
 
+/* Ensure the toggle button's image fits its container */
 .toggle-password img {
-    width: 24px; /* 图标大小 */
-    height: 24px;
+    width: 24px;                          /* Icon width */
+    height: 24px;                         /* Icon height */
 }
 
+/* Hover effect for the toggle password button (using its ID) */
 #toggle-password:hover {
-    background-color: #0056b3;
+    background-color: #0056b3;            /* Darker background on hover */
 }
 
+/* Styling for the login button */
 #login-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 20px; /* 增加上边距 */
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    width: 100%;                          /* Full width button */
+    padding: 10px;                        /* Padding inside the button */
+    margin-top: 20px;                     /* Top margin for spacing */
+    background-color: #28a745;            /* Green background */
+    color: #fff;                          /* White text */
+    border: none;                         /* No border */
+    border-radius: 4px;                   /* Rounded corners */
+    cursor: pointer;                      /* Pointer cursor on hover */
 }
 
+/* Hover effect for the login button */
 #login-button:hover {
-    background-color: #e0e0e0;
+    background-color: #e0e0e0;            /* Lighter background on hover */
 }

@@ -1,38 +1,54 @@
+/* 
+   Header styles:
+   This section defines the appearance and positioning of the header element.
+*/
 header {
-    position: fixed; /* 固定定位 */
-    top: 0; /* 固定在页面顶部 */
-    left: 0; /* 从页面最左侧开始 */
-    width: 100%; /* 背景与页面一样宽 */
-    text-align: center; /* 文字水平居中 */
-    font-weight: bold; /* 文字加粗 */
-    margin: 0; /* 移除默认的外边距 */
-    font-size: 24px; /* 调整字体大小 */
-    z-index: 1000; /* 确保标题在最上层 */
-    background-color: #c5c5c5; /* 背景色 */
-    padding: 10px 0; /* 上下内边距 10px，左右内边距 0 */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+    position: fixed; /* Fixed positioning */
+    top: 0; /* Fixed at the top of the page */
+    left: 0; /* Start from the left edge of the page */
+    width: 100%; /* Full width */
+    text-align: center; /* Center text horizontally */
+    font-weight: bold; /* Bold text */
+    margin: 0; /* Remove default margin */
+    font-size: 24px; /* Set font size */
+    z-index: 1000; /* Ensure header stays on top */
+    background-color: #c5c5c5; /* Background color */
+    padding: 10px 0; /* 10px vertical padding, 0 horizontal padding */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
 }
 
+/* 
+   Body styles:
+   These styles set the overall appearance of the body element.
+*/
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* 确保 body 占满整个视口高度 */
-    overflow: hidden; /* 防止滚动条 */
-    pointer-events: auto; /* 确保鼠标事件可以触发 */
+    font-family: Arial, sans-serif; /* Use Arial font, with sans-serif as a fallback */
+    background-color: #f4f4f4;        /* Set a light grey background for the entire page */
+    margin: 0;                      /* Remove default margins to avoid unwanted spacing */
+    padding: 0;                     /* Remove default padding for a clean layout */
+    display: flex;                  /* Use flexbox layout to center content */
+    justify-content: center;        /* Horizontally center the content */
+    align-items: center;            /* Vertically center the content */
+    height: 100vh;                  /* Set the height of the body to 100% of the viewport height */
+    overflow: hidden;               /* Hide overflow to prevent scrollbars from appearing */
+    pointer-events: auto;           /* Ensure that pointer events (like clicks) are enabled */
 }
 
+/* 
+   h1 styles:
+   These styles define the appearance of the main heading.
+*/
 h1 {
-    margin-bottom: 20px;
-    font-size: 26px;
+    margin-bottom: 20px; /* Add a 20px margin below the heading for spacing */
+    font-size: 26px;     /* Set the font size of h1 to 26 pixels */
 }
 
+/* 
+   Error message styles:
+   Styles for elements displaying error messages.
+*/
 .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
+    color: red;           /* Set the text color to red to indicate an error */
+    font-size: 14px;      /* Use a smaller font size of 14 pixels for error text */
+    margin-top: 10px;     /* Add a 10px top margin to separate the error message from adjacent elements */
 }

@@ -2,12 +2,12 @@ document.getElementById('uploadButton').addEventListener('click', async () => {
     try {
         console.log("Button click event triggered");
 
-        // 创建文件输入元素
+        // Create a file input element
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
 
-        // 等待用户选择文件
+        // Wait for the user to select a file
         const file = await new Promise((resolve, reject) => {
             fileInput.onchange = (e) => {
                 const file = e.target.files[0];
@@ -24,8 +24,8 @@ document.getElementById('uploadButton').addEventListener('click', async () => {
             fileInput.click();
         });
 
-        // 检查文件大小（例如限制为 5MB）
-        const maxSizeMB = 5; // 最大文件大小（MB）
+        // Check file size limit to 5MB
+        const maxSizeMB = 5; // Maximum file size limit to 5MB
         const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
         if (file.size > maxSizeBytes) {
@@ -38,13 +38,13 @@ document.getElementById('uploadButton').addEventListener('click', async () => {
         }
     } catch (error) {
         console.error("An error occurred:", error);
-        alert(error.message); // 提示用户错误信息
+        alert(error.message); // Notify user of error
     }
 });
 
-// 处理图片（加载、调整大小、绘制到画布）
+// Process the image (load, resize, draw on canvas)
 async function processImage(file) {
-    // 读取文件内容
+    // Read the file contents
     const imageSrc = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -57,16 +57,16 @@ async function processImage(file) {
         reader.readAsDataURL(file);
     });
 
-    // 加载图片
+    // Load the image
     const img = await loadImage(imageSrc);
 
-    // 调整图片大小以适应画布
+    // Resize the image to fit the canvas
     const { width, height, offsetX, offsetY } = resizeImageToFitCanvas(img);
 
-    // 绘制图片到画布，居中显示
+    // Draw the image on the canvas, centered
     ctx.drawImage(img, -offsetX, -offsetY, width, height);
 
-    // 将图片转换为像素风
+    // Convert the image to pixel art style
     await convertToPixelArt();
 
     console.log("Image processing completed");
@@ -74,11 +74,11 @@ async function processImage(file) {
     saveState();
 }
 
-// 加载图片
+// Load an image from a given source
 function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
-        img.crossOrigin = "Anonymous"; // 允许跨域图片
+        img.crossOrigin = "Anonymous"; // Allow cross-origin images
         img.onload = () => {
             console.log("Image loaded successfully");
             resolve(img);
@@ -90,21 +90,21 @@ function loadImage(src) {
     });
 }
 
-// 压缩图片
+// Compress an image
 async function compressImage(file, maxSizeBytes) {
     return new Promise((resolve) => {
         const img = new Image();
         img.src = URL.createObjectURL(file);
 
         img.onload = () => {
-            // 创建 Canvas 元素
+            // Create a canvas element
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            // 计算压缩后的尺寸
+            // Calculate the compressed dimensions
             let width = img.width;
             let height = img.height;
-            const maxDimension = 1024; // 最大宽度或高度
+            const maxDimension = 1024; // Maximum width or height
 
             if (width > maxDimension || height > maxDimension) {
                 const ratio = Math.min(maxDimension / width, maxDimension / height);
@@ -112,34 +112,34 @@ async function compressImage(file, maxSizeBytes) {
                 height *= ratio;
             }
 
-            // 设置 Canvas 尺寸
+            // Set canvas dimensions
             canvas.width = width;
             canvas.height = height;
 
-            // 绘制图片到 Canvas
+            // Draw the image on the canvas
             ctx.drawImage(img, 0, 0, width, height);
 
-            // 将 Canvas 内容转换为 Blob
+            // Convert the canvas content to a Blob
             canvas.toBlob(
                 (blob) => {
-                    // 检查压缩后的文件大小
+                    // Check if the compressed file size is acceptable
                     if (blob.size <= maxSizeBytes) {
                         console.log("Compression successful, compressed size:", (blob.size / 1024 / 1024).toFixed(2), "MB");
                         resolve(blob);
                     } else {
-                        // 如果仍然过大，继续降低质量
-                        const quality = 0.8; // 初始质量
+                        // If still too large, further reduce quality
+                        const quality = 0.8; // Initial quality
                         compressWithQuality(canvas, maxSizeBytes, quality, resolve);
                     }
                 },
-                'image/jpeg', // 压缩格式
-                0.9 // 初始质量
+                'image/jpeg', // Compression format
+                0.9 // Initial quality
             );
         };
     });
 }
 
-// 递归压缩，直到文件大小符合要求
+// Recursive compression until file size is acceptable
 function compressWithQuality(canvas, maxSizeBytes, quality, resolve) {
     canvas.toBlob(
         (blob) => {
@@ -147,17 +147,17 @@ function compressWithQuality(canvas, maxSizeBytes, quality, resolve) {
                 console.log("Compression successful, compressed size:", (blob.size / 1024 / 1024).toFixed(2), "MB");
                 resolve(blob);
             } else {
-                // 降低质量，继续压缩
+                // Reduce quality further
                 const newQuality = quality - 0.1;
                 compressWithQuality(canvas, maxSizeBytes, newQuality, resolve);
             }
         },
-        'image/jpeg', // 压缩格式
-        quality // 当前质量
+        'image/jpeg', // Compression format
+        quality // Current quality level
     );
 }
 
-// 调整图片大小以适应画布
+// Resize the image to fit the canvas
 function resizeImageToFitCanvas(img) {
     const canvasAspectRatio = canvas.width / canvas.height;
     const imgAspectRatio = img.width / img.height;
@@ -178,13 +178,13 @@ function resizeImageToFitCanvas(img) {
     return { width, height, offsetX, offsetY };
 }
 
-// 高斯模糊
+// Apply Gaussian blur
 function gaussianBlur(imageData, radius = 1) {
     const width = imageData.width;
     const height = imageData.height;
     const data = imageData.data;
 
-    // 高斯核
+    // Gaussian kernel
     const kernel = [
         [1, 2, 1],
         [2, 4, 2],
@@ -193,14 +193,14 @@ function gaussianBlur(imageData, radius = 1) {
     const kernelSize = 3;
     const kernelSum = 16; // 1+2+1 + 2+4+2 + 1+2+1 = 16
 
-    // 创建一个新的 Uint8ClampedArray 来存储模糊结果
+    // Create a new Uint8ClampedArray to store the blurred result
     const output = new Uint8ClampedArray(data.length);
 
     for (let y = 1; y < height - 1; y++) {
         for (let x = 1; x < width - 1; x++) {
             let r = 0, g = 0, b = 0;
 
-            // 对每个像素应用高斯核
+            // Apply Gaussian kernel to each pixel
             for (let ky = -1; ky <= 1; ky++) {
                 for (let kx = -1; kx <= 1; kx++) {
                     const pixelIndex = ((y + ky) * width + (x + kx)) * 4;
@@ -212,7 +212,7 @@ function gaussianBlur(imageData, radius = 1) {
                 }
             }
 
-            // 将结果写入输出数组
+            // Write results to output array
             const outputIndex = (y * width + x) * 4;
             output[outputIndex] = r / kernelSum;     // R
             output[outputIndex + 1] = g / kernelSum; // G
@@ -224,16 +224,16 @@ function gaussianBlur(imageData, radius = 1) {
     return new ImageData(output, width, height);
 }
 
-// Sobel 边缘检测
+// Sobel edge detection
 function sobelEdgeDetection(imageData) {
     const width = imageData.width;
     const height = imageData.height;
     const data = imageData.data;
 
-    // 创建一个新的 Uint8ClampedArray 来存储边缘检测结果
+    // Create a new Uint8ClampedArray to store edge detection results
     const output = new Uint8ClampedArray(data.length);
 
-    // Sobel 卷积核
+    // Sobel convolution kernels
     const kernelX = [
         [-1, 0, 1],
         [-2, 0, 2],
@@ -249,7 +249,7 @@ function sobelEdgeDetection(imageData) {
         for (let x = 1; x < width - 1; x++) {
             let sumX = 0, sumY = 0;
 
-            // 对每个像素应用 Sobel 核
+            // Apply Sobel kernel to each pixel
             for (let ky = -1; ky <= 1; ky++) {
                 for (let kx = -1; kx <= 1; kx++) {
                     const pixelIndex = ((y + ky) * width + (x + kx)) * 4;
@@ -260,10 +260,10 @@ function sobelEdgeDetection(imageData) {
                 }
             }
 
-            // 计算梯度幅值
+            // Compute gradient magnitude
             const gradient = Math.sqrt(sumX * sumX + sumY * sumY);
 
-            // 将梯度值写入输出数组
+            // Write gradient values to output array
             const outputIndex = (y * width + x) * 4;
             output[outputIndex] = gradient;     // R
             output[outputIndex + 1] = gradient; // G
@@ -275,49 +275,49 @@ function sobelEdgeDetection(imageData) {
     return new ImageData(output, width, height);
 }
 
-// 将图片转换为像素风
+// Convert image to pixel art style
 async function convertToPixelArt() {
     try {
         console.log("Starting pixel art conversion");
 
-        // 获取画布上的图像数据
+        // Retrieve image data from the canvas
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-        // 保存原图的颜色数据
+        // Save a copy of the original color data
         const originalData = new Uint8ClampedArray(imageData.data);
 
-        // 先应用高斯模糊
+        // Apply Gaussian blur first
         const blurredImageData = gaussianBlur(imageData);
         console.log("Gaussian blur completed");
 
-        // 再应用 Sobel 边缘检测
+        // Then apply Sobel edge detection
         const edgeData = sobelEdgeDetection(blurredImageData);
         console.log("Sobel edge detection completed");
 
-        // 清空画布
+        // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // 遍历每个像素块
+        // Iterate through each pixel block
         for (let y = 0; y < canvas.height; y += pixelSize) {
             for (let x = 0; x < canvas.width; x += pixelSize) {
-                // 获取当前像素块的平均梯度值
+                // Get the average gradient of the current block
                 const avgGradient = getAverageGradient(edgeData.data, x, y, canvas.width, canvas.height);
 
-                // 获取当前像素块的平均颜色（从原图获取）
+                // Get the average color of the current block from the original image
                 const avgColor = getAverageColor(originalData, x, y, canvas.width, canvas.height);
 
-                // 判断是否为边缘（梯度值大于阈值）
-                const isEdge = avgGradient > 64; // 阈值可以根据需要调整
+                // Determine if this block is an edge based on the gradient threshold
+                const isEdge = avgGradient > 64; 
 
-                // 获取当前像素块的平均 alpha 值
+                // Get the average alpha value for the current block
                 const avgAlpha = getAverageAlpha(originalData, x, y, canvas.width, canvas.height);
 
-                // 如果 alpha 值为 0，则跳过绘制（保持透明）
+                // Skip drawing if the block is fully transparent
                 if (avgAlpha === 0) {
                     continue;
                 }
 
-                // 如果是边缘，设置为黑色；否则使用原图的颜色
+                // Set fill style to black if it's an edge; otherwise, use the original color
                 ctx.fillStyle = isEdge ? 'black' : `rgba(${avgColor.r}, ${avgColor.g}, ${avgColor.b}, ${avgAlpha / 255})`;
                 ctx.fillRect(x, y, pixelSize, pixelSize);
             }
@@ -329,6 +329,7 @@ async function convertToPixelArt() {
     }
 }
 
+// Compute the average alpha value for a given block of pixels
 function getAverageAlpha(data, x, y, width, height) {
     let alphaSum = 0;
     let count = 0;
@@ -340,7 +341,7 @@ function getAverageAlpha(data, x, y, width, height) {
 
             if (pixelX < width && pixelY < height) {
                 const pixelIndex = (pixelY * width + pixelX) * 4;
-                alphaSum += data[pixelIndex + 3]; // alpha 值在 A 通道
+                alphaSum += data[pixelIndex + 3]; // Alpha value in the A channel
                 count++;
             }
         }
@@ -349,7 +350,7 @@ function getAverageAlpha(data, x, y, width, height) {
     return Math.round(alphaSum / count);
 }
 
-// 获取像素块的平均梯度值
+// Compute the average gradient value for a given block of pixels
 function getAverageGradient(data, x, y, width, height) {
     let gradientSum = 0;
     let count = 0;
@@ -361,7 +362,7 @@ function getAverageGradient(data, x, y, width, height) {
 
             if (pixelX < width && pixelY < height) {
                 const pixelIndex = (pixelY * width + pixelX) * 4;
-                gradientSum += data[pixelIndex]; // 梯度值在 R 通道
+                gradientSum += data[pixelIndex]; // Gradient value in the R channel
                 count++;
             }
         }
@@ -370,7 +371,7 @@ function getAverageGradient(data, x, y, width, height) {
     return gradientSum / count;
 }
 
-// 获取像素块的平均颜色
+// Compute the average color for a given block of pixels
 function getAverageColor(data, x, y, width, height) {
     let r = 0, g = 0, b = 0;
     let count = 0;

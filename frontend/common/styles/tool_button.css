@@ -1,25 +1,29 @@
+/* Style for tool buttons */
 .tool-button {
-    width: 40px; /* 按钮宽度 */
-    height: 40px; /* 按钮高度 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f9f9f9; /* 默认背景色 */
-    border: 1px solid #ccc; /* 边框 */
-    border-radius: 5px; /* 圆角 */
-    cursor: pointer;
-    transition: background-color 0.2s; /* 背景色变化动画 */
+    width: 40px;              /* Set the button width to 40 pixels */
+    height: 40px;             /* Set the button height to 40 pixels */
+    display: flex;            /* Use flexbox layout for the button */
+    justify-content: center;  /* Center content horizontally */
+    align-items: center;      /* Center content vertically */
+    background-color: #f9f9f9;  /* Default background color */
+    border: 1px solid #ccc;   /* Add a light grey border */
+    border-radius: 5px;       /* Round the corners with a 5px radius */
+    cursor: pointer;          /* Change cursor to pointer on hover */
+    transition: background-color 0.2s;  /* Animate background color changes over 0.2 seconds */
 }
 
+/* Style for active state of tool buttons */
 .tool-button.active {
-    background-color: #28a745; /* 选中时的背景色 */
+    background-color: #28a745;  /* Set background color to green when active */
 }
 
+/* Style for hover state of tool buttons */
 .tool-button:hover {
-    background-color: #e0e0e0; /* 鼠标悬停时的背景色 */
+    background-color: #e0e0e0;  /* Change background color to light grey on hover */
 }
 
+/* Style for images inside tool buttons */
 .tool-button img {
-    width: 24px; /* 图标大小 */
-    height: 24px;
+    width: 24px;  /* Set the icon width to 24 pixels */
+    height: 24px; /* Set the icon height to 24 pixels */
 }

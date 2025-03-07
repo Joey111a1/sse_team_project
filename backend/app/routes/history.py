@@ -11,11 +11,11 @@ import json
 
 router = APIRouter()
 
-# ✅ 保存历史记录
+# Save a new history record
 @router.post("/history/save", status_code=201)
 async def save_history(data: HistorySaveRequest, db: Session = Depends(get_db)):
     try:
-        # 将 imageData 转换成 JSON 存入数据库
+        # Convert imageData to JSON and save into the database
         history_entry = History(image_data=json.dumps(data.imageData))
         db.add(history_entry)
         db.commit()
@@ -25,7 +25,7 @@ async def save_history(data: HistorySaveRequest, db: Session = Depends(get_db)):
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error saving history: {str(e)}")
     
-# ✅ 获取特定历史记录
+# Get a specific history record
 @router.get("/history/{history_id}", response_model=HistoryResponse)
 async def get_history(history_id: int, db: Session = Depends(get_db)):
     history_entry = db.query(History).filter(History.id == history_id).first()
@@ -35,12 +35,11 @@ async def get_history(history_id: int, db: Session = Depends(get_db)):
     return {
         "id": history_entry.id,
         "user_id": history_entry.user_id,  
-        "imageData": json.loads(history_entry.image_data),  # 从 JSON 还原数据
+        "imageData": json.loads(history_entry.image_data),  # Restore JSON data
         "created_at": history_entry.created_at
     }
 
-
-# ✅ 获取所有历史记录
+# Get all history records
 @router.get("/history_all", response_model=list[HistoryResponse])
 async def get_all_histories(db: Session = Depends(get_db)):
     history_entries = db.query(History).all()
@@ -53,7 +52,7 @@ async def get_all_histories(db: Session = Depends(get_db)):
         "created_at": entry.created_at
     } for entry in history_entries]
 
-# ✅ 获取用户历史记录
+# Get history records for the current user
 @router.get("/history/user", response_model=List[HistorySummaryResponse])
 async def get_user_history(db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     histories = db.query(History).filter(History.user_id == current_user.id).order_by(History.created_at.desc()).all()

@@ -1,12 +1,10 @@
-// tools.js
+// Tool state variables
+let currentTool = 'pencil';   // Currently selected tool
+let currentColor = '#000000'; // Current color for drawing
+let brushSize = 1;            // Brush size
+let isDrawing = false;        // Flag indicating if the mouse is pressed
 
-// 工具状态
-let currentTool = 'pencil'; // 当前选中的工具
-let currentColor = '#000000'; // 当前颜色
-let brushSize = 1; // 笔刷大小
-let isDrawing = false; // Track if the mouse is pressed
-
-// 获取工具按钮元素
+// Get DOM elements for tool buttons and inputs
 const pencilTool = document.getElementById('pencil-tool');
 const bucketTool = document.getElementById('bucket-tool');
 const eraserTool = document.getElementById('eraser-tool');
@@ -14,53 +12,54 @@ const colorpickerTool = document.getElementById('colorpicker-tool');
 const brushSizeInput = document.getElementById('brush-size');
 const colorPickerInput = document.getElementById('color-picker');
 
-// 初始化工具事件监听
+// Initialize event listeners for tool interactions
 function initTools() {
-    // 铅笔工具
+    // Pencil tool: select pencil tool on click
     pencilTool.addEventListener('click', () => {
         currentTool = 'pencil';
         setActiveTool(pencilTool);
     });
 
-    // 油漆桶工具
+    // Bucket tool: select bucket tool on click
     bucketTool.addEventListener('click', () => {
         currentTool = 'bucket';
         setActiveTool(bucketTool);
     });
 
-    // 橡皮擦工具
+    // Eraser tool: select eraser tool on click
     eraserTool.addEventListener('click', () => {
         currentTool = 'eraser';
         setActiveTool(eraserTool);
     });
 
-    // 取色器工具
+    // Color picker tool: select colorpicker tool on click
     colorpickerTool.addEventListener('click', () => {
         currentTool = 'colorpicker';
         setActiveTool(colorpickerTool);
     });
 
-    // 笔刷大小调整
+    // Update brush size when the range input changes
     brushSizeInput.addEventListener('input', (e) => {
         brushSize = parseInt(e.target.value);
     });
 
-    // 颜色选择器
+    // Update current color when the color input changes
     colorPickerInput.addEventListener('input', (e) => {
         currentColor = e.target.value;
     });
 }
 
-// Color picker event listener
+// Additional listener for color picker (redundant, but included)
 document.getElementById('color-picker').addEventListener('input', (e) => {
     currentColor = e.target.value;
 });
 
-// Clear canvas event listener
+// Clear canvas event: clears the entire canvas when "clear" is clicked
 document.getElementById('clear-canvas').addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
+// Event listeners for color palette selection; update current color and color input
 document.querySelectorAll('.color-palette .color').forEach(color => {
     color.addEventListener('click', () => {
         currentColor = color.getAttribute('data-color');
@@ -68,27 +67,27 @@ document.querySelectorAll('.color-palette .color').forEach(color => {
     });
 });
 
-
-
-// 设置当前工具为选中状态
+// Set the active tool by adding the "active" class to the selected tool button
 function setActiveTool(tool) {
-    // 移除所有工具的选中状态
+    // Remove the "active" class from all tool buttons
     pencilTool.classList.remove('active');
     bucketTool.classList.remove('active');
     eraserTool.classList.remove('active');
     colorpickerTool.classList.remove('active');
 
-    // 设置当前工具为选中状态
+    // Add the "active" class to the selected tool button
     tool.classList.add('active');
 }
 
-// 处理绘制逻辑
+// Process drawing at coordinates (x, y) based on the selected tool
 function handleDraw(x, y) {
-    console.log('Handling draw at:', x, y); // 确保函数执行
-    
+    console.log('Handling draw at:', x, y); // Log draw event
+
+    // Ensure coordinates are within canvas bounds
     if (x < 0 || x >= canvas.width / pixelSize || 
         y < 0 || y >= canvas.height / pixelSize) return;
 
+    // Execute drawing action based on current tool
     if (currentTool === 'pencil') {
         drawPixelWithBrushSize(x, y);
     } else if (currentTool === 'bucket') {
@@ -100,7 +99,7 @@ function handleDraw(x, y) {
     }
 }
 
-// 使用笔刷大小绘制像素
+// Draw a pixel using the current brush size and color
 function drawPixelWithBrushSize(x, y) {
     ctx.fillStyle = currentColor;
 
@@ -108,99 +107,100 @@ function drawPixelWithBrushSize(x, y) {
     const startY = y - Math.floor(brushSize / 2);
 
     ctx.fillRect(
-        startX * pixelSize, // 起始 X
-        startY * pixelSize, // 起始 Y
-        brushSize * pixelSize, // 宽度
-        brushSize * pixelSize // 高度
+        startX * pixelSize, // Starting X coordinate
+        startY * pixelSize, // Starting Y coordinate
+        brushSize * pixelSize, // Width of the drawn area
+        brushSize * pixelSize  // Height of the drawn area
     );
 }
 
+// Draw a single pixel at (x, y) using the current color
 function drawPixel(x, y) {
     ctx.fillStyle = currentColor;
     ctx.fillRect(
-        x * pixelSize, // 起始 X
-        y * pixelSize, // 起始 Y
-        pixelSize, // 宽度
-        pixelSize // 高度
+        x * pixelSize, // X coordinate
+        y * pixelSize, // Y coordinate
+        pixelSize,     // Width
+        pixelSize      // Height
     );
 }
 
-// 填充区域（油漆桶工具）
+// Bucket tool: fill an area starting from (x, y) with the current color
 function fillArea(x, y) {
     const targetColor = getPixelColor(x, y);
 
     if (!targetColor || targetColor === currentColor) return;
 
-    const stack = [[x, y]]; // 使用栈存储待填充的像素
-    const filled = new Set(); // 记录已经填充的像素
+    const stack = [[x, y]]; // Stack for pixels to fill
+    const filled = new Set(); // Track filled pixels
     const directions = [
-        [-1, 0], [1, 0], [0, -1], [0, 1] // 左、右、上、下
+        [-1, 0], [1, 0], [0, -1], [0, 1] // Directions: left, right, up, down
     ];
 
     while (stack.length > 0) {
         const [currentX, currentY] = stack.pop();
         const pixelKey = `${currentX},${currentY}`;
 
-        // 如果越界或者已填充，跳过
+        // Skip if pixel is out of bounds or already filled
         if (currentX < 0 || currentX >= canvas.width / pixelSize || 
             currentY < 0 || currentY >= canvas.height / pixelSize || filled.has(pixelKey)) {
             continue;
         }
 
-        // 如果像素颜色不等于目标颜色，跳过
+        // Skip if the pixel color does not match the target color
         const pixelColor = getPixelColor(currentX, currentY);
         if (pixelColor !== targetColor) continue;
 
-        // 填充当前像素
+        // Fill the pixel and mark it as filled
         drawPixel(currentX, currentY);
         filled.add(pixelKey);
 
-        // 将相邻像素加入栈中
+        // Add adjacent pixels to the stack
         for (const [dx, dy] of directions) {
             stack.push([currentX + dx, currentY + dy]);
         }
     }
 }
 
-// 擦除像素
+// Eraser tool: erase a pixel area by making it transparent
 function erasePixel(x, y) {
     const startX = x - Math.floor(brushSize / 2);
     const startY = y - Math.floor(brushSize / 2);
 
-    ctx.globalCompositeOperation = 'destination-out'; // 让填充变透明
+    ctx.globalCompositeOperation = 'destination-out'; // Set to erase mode
     ctx.fillRect(
-        startX * pixelSize, // 起始 X
-        startY * pixelSize, // 起始 Y
-        brushSize * pixelSize, // 宽度
-        brushSize * pixelSize // 高度
+        startX * pixelSize, // X coordinate
+        startY * pixelSize, // Y coordinate
+        brushSize * pixelSize, // Width
+        brushSize * pixelSize  // Height
     );
-    ctx.globalCompositeOperation = 'source-over'; // 恢复正常绘制模式
+    ctx.globalCompositeOperation = 'source-over'; // Restore default drawing mode
 }
 
-// 取色器功能：获取点击位置的颜色
+// Color picker tool: pick color at (x, y) and update current color
 function pickColor(x, y) {
-    const color = getPixelColor(x, y); // 获取颜色
-    currentColor = color; // 设置为当前颜色
-    colorPickerInput.value = rgbToHex(color); // 更新颜色选择器
+    const color = getPixelColor(x, y); // Get color at the specified pixel
+    currentColor = color;              // Update current color
+    colorPickerInput.value = rgbToHex(color); // Update the color picker input
 }
 
-// 获取像素颜色
+// Retrieve the color of the pixel at (x, y)
 function getPixelColor(x, y) {
     const imageData = ctx.getImageData(x * pixelSize, y * pixelSize, 1, 1).data;
-    const alpha = imageData[3]; // Alpha channel
+    const alpha = imageData[3]; // Get the alpha channel value
 
     if (alpha === 0) {
-        return 'transparent'; // 返回透明值
+        return 'transparent'; // Return transparent if alpha is 0
     }
 
     const r = imageData[0].toString(16).padStart(2, '0');
     const g = imageData[1].toString(16).padStart(2, '0');
     const b = imageData[2].toString(16).padStart(2, '0');
 
-    return `#${r}${g}${b}`;
+    return `#${r}${g}${b}`; // Return color in HEX format
 }
 
-// 将 RGB 颜色转换为 HEX 格式
+// Convert an RGB color string to HEX format
 function rgbToHex(rgb) {
     if (rgb.charAt(0) === '#') return rgb;
 
@@ -212,5 +212,5 @@ function rgbToHex(rgb) {
     return `#${r}${g}${b}`;
 }
 
-// 初始化工具
+// Initialize tool event listeners
 initTools();

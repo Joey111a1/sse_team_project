@@ -4,16 +4,22 @@ from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
-# 读取环境变量
+# Load environment variables from a .env file
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# 连接数据库
+# Create a SQLAlchemy engine using the provided DATABASE_URL
 engine = create_engine(DATABASE_URL)
+
+# Configure a sessionmaker with autocommit disabled and autoflush disabled,
+# binding it to the engine for database operations
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Create a base class for declarative models
 Base = declarative_base()
 
-# 获取数据库会话
+# Dependency function to provide a database session for request handling.
+# This ensures that each request gets a fresh session which is closed after use.
 def get_db():
     db = SessionLocal()
     try:

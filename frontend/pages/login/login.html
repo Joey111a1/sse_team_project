@@ -4,44 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Link to common global styles -->
     <link rel="stylesheet" href="../../common/styles/common.css">
-	<link rel="stylesheet" href="../../common/styles/tool_button.css">
+    <!-- Link to tool button specific styles -->
+    <link rel="stylesheet" href="../../common/styles/tool_button.css">
+    <!-- Link to login page specific styles -->
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <div class="container">
-		<header>Pixel Art Editor</header>
-        <!-- Login Section (Default) -->
+        <header>Pixel Art Editor</header>
+        <!-- Login Section (visible by default) -->
         <div id="login-section">
             <h1>Login</h1>
             <input type="text" id="login-email" placeholder="Email">
             <div class="password-container">
-				<input type="password" id="login-password" placeholder="Password">
-				<button id="login-toggle-password" class="toggle-password">
-					<img src="../../assets/icons/eye-open.png" alt="Toggle Password" id="login-toggle-icon">
-				</button>
-			</div>
+                <input type="password" id="login-password" placeholder="Password">
+                <!-- Button to toggle password visibility -->
+                <button id="login-toggle-password" class="toggle-password">
+                    <img src="../../assets/icons/eye-open.png" alt="Toggle Password" id="login-toggle-icon">
+                </button>
+            </div>
             <button id="login-button">Login</button>
             <p id="login-error" class="error-message"></p>
-            <p class="toggle-section">Don't have an account? <a href="#" id="show-register">Register</a></p>
+            <p class="toggle-section">
+                Don't have an account? <a href="#" id="show-register">Register</a>
+            </p>
         </div>
 
-        <!-- Register Section (Hidden by Default) -->
+        <!-- Register Section (hidden by default) -->
         <div id="register-section" style="display: none;">
             <h1>Register</h1>
             <input type="text" id="register-username" placeholder="Username">
             <input type="text" id="register-email" placeholder="Email">
             <div class="password-container">
-				<input type="password" id="register-password" placeholder="Password">
-				<button id="register-toggle-password" class="toggle-password">
-					<img src="../../assets/icons/eye-open.png" alt="Toggle Password" id="register-toggle-icon">
-				</button>
-			</div>
+                <input type="password" id="register-password" placeholder="Password">
+                <!-- Button to toggle password visibility for registration -->
+                <button id="register-toggle-password" class="toggle-password">
+                    <img src="../../assets/icons/eye-open.png" alt="Toggle Password" id="register-toggle-icon">
+                </button>
+            </div>
             <button id="register-button">Register</button>
             <p id="register-error" class="error-message"></p>
-            <p class="toggle-section">Already have an account? <a href="#" id="show-login">Login</a></p>
+            <p class="toggle-section">
+                Already have an account? <a href="#" id="show-login">Login</a>
+            </p>
         </div>
     </div>
+    <!-- Link to the login page JavaScript file -->
     <script src="login.js"></script>
 </body>
 </html>

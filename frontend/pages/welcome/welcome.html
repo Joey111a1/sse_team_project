@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
+    <!-- Link to common styles -->
     <link rel="stylesheet" href="../../common/styles/common.css">
+    <!-- Link to welcome page-specific styles -->
     <link rel="stylesheet" href="welcome.css">
 </head>
 <body>
+    <!-- Fixed header displaying the application title -->
     <header>Pixel Art Editor</header>
     <div class="welcome-container">
-        <!-- 左侧部分 -->
+        <!-- Left section of the welcome page -->
         <div class="welcome-left">
             <h1>Welcome!</h1>
         </div>
-        <!-- 右侧部分 -->
+        <!-- Right section of the welcome page -->
         <div class="welcome-right">
             <div class="panel">
-                <!-- 新建项目按钮 -->
+                <!-- "New Project" button -->
                 <button id="newProject" class="new-project-button">New Project</button>
-                <!-- 历史画布列表 -->
+                <!-- Container for history canvas list -->
                 <div class="history-list"></div>
             </div>
         </div>
     </div>
-    <!-- 模式选择面板 -->
+    <!-- Mode selection overlay panel -->
     <div id="modeSelectionPanel" class="mode-selection-panel">
         <div class="mode-selection-content">
             <h2>Select Mode</h2>
@@ -32,6 +35,7 @@
             <button id="multiplayerMode" class="mode-button">Collaboration</button>
         </div>
     </div>
+    <!-- Include welcome page JavaScript -->
     <script src="welcome.js"></script>
 </body>
 </html>
