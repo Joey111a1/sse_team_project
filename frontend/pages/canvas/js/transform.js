@@ -15,25 +15,23 @@ let translateX = defaultX, translateY = defaultY;
 let isFlippedHorizontal = defaultIsFlippedHorizontal;
 let isFlippedVertical = defaultIsFlippedVertical;
 
-// 旋转画布的像素数据
 function rotateCanvas(canvas, ctx, degrees) {
-    // 将负角度转换为等效的正角度
+    // turn negative degree to that between 0 and 360
     degrees = ((degrees % 360) + 360) % 360;
 
     const width = canvas.width;
     const height = canvas.height;
 
-    // 获取画布的像素数据
     const imageData = ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
 
-    // 创建一个新的画布来存储旋转后的像素数据
+    // create a new canvas to store the rotated pixel info
     const newCanvas = document.createElement('canvas');
     const newCtx = newCanvas.getContext('2d');
 
     let newWidth, newHeight;
 
-    // 根据旋转角度调整新画布的尺寸
+    // resize canvas according to new degrees
     if (degrees === 90 || degrees === 270) {
         newWidth = height;
         newHeight = width;
@@ -45,37 +43,37 @@ function rotateCanvas(canvas, ctx, degrees) {
     newCanvas.width = newWidth;
     newCanvas.height = newHeight;
 
-    // 创建新的像素数据
+    // create new pixel data
     const newImageData = newCtx.createImageData(newWidth, newHeight);
     const newData = newImageData.data;
 
-    // 旋转像素数据
+    // new locs after rotation
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const index = (y * width + x) * 4;
             let newX, newY, newIndex;
 
             if (degrees === 90) {
-                // 向右旋转90度
+                // 90 degree to the right
                 newX = height - y - 1;
                 newY = x;
             } else if (degrees === 180) {
-                // 旋转180度
+                // 180 degree
                 newX = width - x - 1;
                 newY = height - y - 1;
             } else if (degrees === 270) {
-                // 向左旋转90度（或向右旋转270度）
+                // 90 degree to the left or 270 degree to the right
                 newX = y;
                 newY = width - x - 1;
             } else {
-                // 不旋转
+                // no rotation
                 newX = x;
                 newY = y;
             }
 
             newIndex = (newY * newWidth + newX) * 4;
 
-            // 复制像素数据
+            // copy pixel data
             newData[newIndex] = data[index];         // R
             newData[newIndex + 1] = data[index + 1]; // G
             newData[newIndex + 2] = data[index + 2]; // B
@@ -83,7 +81,7 @@ function rotateCanvas(canvas, ctx, degrees) {
         }
     }
 
-    // 将旋转后的像素数据写回画布
+    // rewrite the canvas data back to the 
     canvas.width = newWidth;
     canvas.height = newHeight;
     ctx.putImageData(newImageData, 0, 0);

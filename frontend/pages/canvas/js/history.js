@@ -67,7 +67,7 @@ else {
         history.push(currentState);
         redoStack = [];
         if (is_saving === true) {
-            syncWithBackend(currentState);
+            syncWithBackend();
         }
         saveCanvasState();  // 保存画布状态
     }
@@ -87,12 +87,13 @@ else {
         return true;
     }
 
-    function syncWithBackend(state) {
+    function syncWithBackend() {
         console.log("syncWithBackend function is called");
-        const imageData = Array.from(state.data);
+        // Generate a valid PNG data URL
+        const dataURL = canvas.toDataURL('image/png');
         fetch('https://pixel-art.azurewebsites.net/api/history/save', {
             method: 'POST',
-            body: JSON.stringify({ user_id: userId, imageData: imageData }),
+            body: JSON.stringify({ user_id: userId, imageData: dataURL }),
             headers: { 'Content-Type': 'application/json' }
         }).then(response => {
             if (!response.ok) {
